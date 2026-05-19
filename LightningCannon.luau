@@ -2765,17 +2765,17 @@ local function C_c()
 					fireAttack(targetMode, bind.attackKey)
 			end)
 			-- Setup Keybinds
-			_G.ModeV = "gunless" -- Default
+			_G.ModeV = "default" -- Default (matches attacks table keys)
 
 			local keyBinds = {
-				[Enum.KeyCode.F] = "gun"
+					[Enum.KeyCode.F] = "f"  -- "f" matches attacks["f"] and addmode("f")
 			}
 
 			local function handleModeExecution(mode)
-					if mode == "gun" then
+					if mode == "f" then
 							t.setJumpPower(70)
 							t.setWalkSpeed(25)
-					elseif mode == "gunless" then
+					elseif mode == "default" then
 							t.setJumpPower(60)
 							t.setWalkSpeed(16)
 					end
@@ -2794,7 +2794,7 @@ local function C_c()
 					local selectedMode = keyBinds[input.KeyCode]
 					if selectedMode then
 							if _G.ModeV == selectedMode then
-									_G.ModeV = "gunless"
+									_G.ModeV = "default"  -- was "gunless", now "default"
 							else
 									_G.ModeV = selectedMode
 							end
@@ -2813,8 +2813,8 @@ local function C_c()
 
 			-- Configuration: Link your GitHub raw URLs here
 			local SongLinks = {
-				["gunless"] = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunAway",
-				["gun"]     = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunOut",
+					["default"] = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunAway",
+					["f"]       = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunOut",
 			}
 
 			function getmp3(modeName)
