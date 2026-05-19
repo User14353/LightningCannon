@@ -2590,7 +2590,7 @@ local function C_c()
 		local RockAccessory            = getPartJoint(rock)
 
 		attacks["f"] = attacks["f"] or {}
-		attacks["f"]["z"] = function(p)
+		attacks["gun"]["z"] = function(p)
 			RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0+0.025*sin(sine*20)),angles(-1.690860599383551,0,-3.141592502593994)),deltaTime)
 			Neck.C0=Lerp(Neck.C0,cfMul(cf(-0.1848053513911738,1,0),angles(-1.464800272747772,0,-3.141592502593994)),deltaTime)
 			LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-0.9586294073807569,-0.9072313810649675,-1.061425460012336-0.025*sin(sine*20)),angles(0.2539781041767064-0.02*sin(sine*20),-1.570796370506287,0)),deltaTime)
