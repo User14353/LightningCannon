@@ -1773,7 +1773,41 @@ local reanimate=function()
 
 	local noYvelTime=1
 	local lastsine=sine
+	-- Attack state (read inside mainFunction's lerp step)
+	local attackActive = false
+	local attackProgress = 0       -- 0..1 drives the lerp weight
+	local attackDuration = 0.45    -- seconds the attack animation runs
+	local currentAttackMode = nil  -- which mode's attack is playing
+	local currentAttackKey  = nil  -- which key triggered it (e.g. "z")
+
+	-- Attack definitions table
+	-- Layout: attacks[modeName][keyName] = function(progress)
+	-- progress is 0→1 over attackDuration, then auto-resets
+	-- Use it to drive a sin curve or a one-shot lerp weight
+	local attacks = {}
+
+	local function registerAttack(modeName, keyName, fn)
+			if not attacks[modeName] then attacks[modeName] = {} end
+			attacks[modeName][keyName] = fn
+	end
+
+	local function fireAttack(modeName, keyName)
+			local modeAttacks = attacks[modeName]
+			if not modeAttacks then return end
+			local fn = modeAttacks[keyName]
+			if not fn then return end
+			attackActive = true
+			attackProgress = 0
+			currentAttackMode = modeName
+			currentAttackKey  = keyName
+	end
+
+-- Add more modes/keys the same way:
+-- registerAttack("default", "x", function(p) ... end)
+-- registerAttack("f",       "x", function(p) ... end)
+-- ──────────────────────────────────────────────────────────────────
 	local mainFunction=function()
+
 		sine=osclock()
 		local delta=sine-lastsine
 		deltaTime=min(delta*10,1)
@@ -2198,6 +2232,18 @@ local reanimate=function()
 				end
 			end
 		end
+		if attackActive then
+				attackProgress = attackProgress + delta / attackDuration
+				if attackProgress >= 1 then
+						attackProgress = 1
+						attackActive   = false
+				end
+				local modeAttacks = attacks[currentAttackMode]
+				if modeAttacks then
+						local fn = modeAttacks[currentAttackKey]
+						if fn then fn(attackProgress) end
+				end
+		end
 		setsimrad()
 	end
 
@@ -2340,7 +2386,9 @@ local reanimate=function()
 		getVel=getVel,
 		getCamCF=getCamCF,
 		isFirstPerson=isFirstPerson,
-		setHipHeight=setHipHeight
+		setHipHeight=setHipHeight,
+    fireAttack = fireAttack,
+    attacks = attacks,
 	}
 end
 local TweenService = game:GetService("TweenService")
@@ -2495,6 +2543,9 @@ local function C_c()
 	-- Reanimate Logic
 	reBtn.MouseButton1Click:Connect(function()
 		local t=reanimate()
+		if type(t) ~= "table" then return end
+		local fireAttack = t.fireAttack
+		local attacks = t.attacks
 		local velYchg=t.velYchg 
 		local Yvel=t.Yvel
 		local raycastlegs=t.raycastlegs
@@ -2511,13 +2562,14 @@ local function C_c()
 		local getJoint=t.getJoint
 		local setCfr=t.setCfr
 		local cframes=t.cframes
+		local getPart=t.getPart
 		local joints=t.joints
 		local refreshjoints=t.refreshjoints
 		local onnewcamera=t.onnewcamera
 		local SoundService=game.SoundService
 		local setHipHeight=t.setHipHeight
 		local getAccWeldFromMesh=t.getAccWeldFromMesh
-		if type(t)~="table" then return end
+
 		local addmode=t.addmode
 		local getJoint=t.getJoint
 		local velbycfrvec=t.velbycfrvec
@@ -2527,6 +2579,20 @@ local function C_c()
 		local RightHip=getJoint("Right Hip")
 		local LeftHip=getJoint("Left Hip")
 		local Neck=getJoint("Neck")
+
+		attacks["f"] = attacks["f"] or {}
+		attacks["f"]["z"] = function(p)
+				local alpha = sin(p * math.pi)
+				RightShoulder.C0 = Lerp(RightShoulder.C0,
+						cfMul(cf(1,0.2,0), angles(-(math.pi*0.9*alpha),2.0,0)), deltaTime*5)
+				RootJoint.C0 = Lerp(RootJoint.C0,
+						cfMul(cf(0,0,0), angles(-1.56-0.15*alpha,0,-3.141592502593994)), deltaTime*5)
+		end
+
+		-- Add more modes/keys the same way:
+		-- registerAttack("default", "x", function(p) ... end)
+		-- registerAttack("f",       "x", function(p) ... end)
+
 		local gun                      = getPartFromMesh(6831441507, 6833003967)
 		local AJBackAccessory          = getPartJoint(gun)
 		local Pixie                    = getPartFromMesh(128216670, 150379943)
@@ -2552,7 +2618,9 @@ local function C_c()
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,-0.01)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			AJBackAccessory.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+			CrystalStaff.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			CrystalStaff.Part1=getPart("Torso")   CrystalStaff.C1=cf_0
 		end,
 		walk = function()
@@ -2561,12 +2629,14 @@ local function C_c()
 			LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1,-1-0.01*sin(sine*2),0-0.1*sin(sine*2)),angles(-0.2274227437829142+0.5*sin(sine*2),-1.4,0-0.025*sin(sine*1.5))),deltaTime)
 			LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-1,0.5690323679070719,0),angles(1.664163951285611-0.05*sin(sine*1.5),-1.274620294979512,1.755664559685806)),deltaTime)
 			RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1,0+0.1*sin(sine*2)),angles(0.05992280652326087-0.5*sin(sine*2),1.4,0)),deltaTime)
-			RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,-0.1809772692228613,0),angles(1.664163951285611-0.05*sin(sine*1.5),-1.274620294979512,1.755664559685806)),deltaTime)
+			RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1.5,0.5690323679070719,0),angles(-1.664163951285611-0.05*sin(sine*1.5),-1.274620294979512,-1.755664559685806)),deltaTime)
 			AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			AJBackAccessory.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+			CrystalStaff.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			CrystalStaff.Part1=getPart("Torso")   CrystalStaff.C1=cf_0
 		end,
 		jump = function()
@@ -2580,7 +2650,9 @@ local function C_c()
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			AJBackAccessory.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+			CrystalStaff.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			CrystalStaff.Part1=getPart("Torso")   CrystalStaff.C1=cf_0
 		end,
 		fall = function()
@@ -2594,7 +2666,9 @@ local function C_c()
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			AJBackAccessory.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+			CrystalStaff.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			CrystalStaff.Part1=getPart("Torso")   CrystalStaff.C1=cf_0
 		end,
 	})
@@ -2607,12 +2681,14 @@ local function C_c()
 			LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-1,0.5690323679070719,0),angles(1.664163951285611-0.05*sin(sine*1.5),-1.274620294979512,1.755664559685806)),deltaTime)
 			RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1,0),angles(-0.381719008690701-0.05*sin(sine*1.5),1.057171790310811,0.1080783656868194)),deltaTime)
 			RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,-0.1809772692228613,0),angles(3.170657552728679-0.1*sin(sine*1.5),2.528360285681817,-0.4122203328217511)),deltaTime)
-			AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
-			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
+			AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,0.04),angles(-3.15,0,-0)),deltaTime)
+			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.2493955377946824,1.225958037794682,0.039520263671875),angles(-3.15,0,-0.6899999999999999)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
-			AJBackAccessory.C1=cf_0 AJBackAccessory.Part1=getPart("Right Arm")
-			CrystalStaff.C1=cf_0   CrystalStaff.Part1=getPart("Right Arm")
+			AJBackAccessory.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(-90))
+			AJBackAccessory.Part1=getPart("Right Arm")
+			CrystalStaff.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(-90))
+			CrystalStaff.C1=cf_0 CrystalStaff.Part1=getPart("Right Arm")
 		end,
 		walk = function()
 			RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -2625,8 +2701,10 @@ local function C_c()
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
-			AJBackAccessory.C1=cf_0 AJBackAccessory.Part1=getPart("Right Arm")
-			CrystalStaff.C1=cf_0   CrystalStaff.Part1=getPart("Right Arm")
+			AJBackAccessory.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(90))
+			AJBackAccessory.Part1=getPart("Right Arm")
+			CrystalStaff.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(90))
+			CrystalStaff.C1=cf_0 CrystalStaff.Part1=getPart("Right Arm")
 		end,
 		jump = function()
 			RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -2639,7 +2717,9 @@ local function C_c()
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			AJBackAccessory.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(90))
 			AJBackAccessory.Part1=getPart("Right Arm")
+			CrystalStaff.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(90))
 			CrystalStaff.C1=cf_0 CrystalStaff.Part1=getPart("Right Arm")
 		end,
 		fall = function()
@@ -2653,12 +2733,56 @@ local function C_c()
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
 			CrystalStaff.C0=Lerp(CrystalStaff.C0,cfMul(cf(0.5000465794613485,1.547993442468476,-0.15),angles(0,0,0.66)),deltaTime)
 			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			AJBackAccessory.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(90))
 			AJBackAccessory.Part1=getPart("Right Arm")
+			CrystalStaff.C0=cf(0,0,0)*angles(rad(180),rad(0),rad(90))
 			CrystalStaff.C1=cf_0 CrystalStaff.Part1=getPart("Right Arm")
 		end,
 	})
-			-- Setup Keybinds
+
+
+			-- ── Keybind system ─────────────────────────────────────────────
+			-- Maps KeyCode → {mode, attackKey}
+			-- Add entries here to bind more keys in more modes.
+			local attackKeybinds = {
+					[e.KeyCode.Z] = { modeKey = nil, attackKey = "z" },
+					-- e.g. [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
+			}
+			-- modeKey = nil  means "fire for whatever current mode is active"
+			-- modeKey = "f"  means "only fire when in mode f"
+
 			local UIS = game:GetService("UserInputService")
+
+			if _G.AttackInputConnection then
+					_G.AttackInputConnection:Disconnect()
+					_G.AttackInputConnection = nil
+			end
+
+			_G.AttackInputConnection = UIS.InputBegan:Connect(function(input, gpe)
+					if gpe then return end
+
+					local bind = attackKeybinds[input.KeyCode]
+					if not bind then return end
+
+					-- Determine which mode name to look up
+					-- t.getJoint etc. are already captured above via the addmode calls.
+					-- We read the active mode from the key-toggle logic in reanimate.
+					-- The cleanest way: resolve via the current _G.ModeV string.
+					local activeModeStr = tostring(_G.ModeV or "default")
+
+					-- If the bind is mode-locked, enforce it
+					if bind.modeKey and bind.modeKey ~= activeModeStr then return end
+
+					-- Check the reanimate table has an attack for this mode
+					local targetMode = bind.modeKey or activeModeStr
+					if not attacks[targetMode] then
+							-- Fallback to default mode attack if this mode has none
+							targetMode = "default"
+					end
+
+					fireAttack(targetMode, bind.attackKey)
+			end)
+			-- Setup Keybinds
 			_G.ModeV = "gunless" -- Default
 
 			local keyBinds = {
@@ -2669,15 +2793,12 @@ local function C_c()
 					if mode == "gun" then
 							t.setJumpPower(70)
 							t.setWalkSpeed(25)
-					end,
-					if mode == "gunless" then
+					elseif mode == "gunless" then
 							t.setJumpPower(60)
 							t.setWalkSpeed(16)
-					end,
+					end
 			end
 
-
-			local UIS = game:GetService("UserInputService")
 
 			if _G.HatInputConnection then
 					_G.HatInputConnection:Disconnect()
@@ -2811,7 +2932,7 @@ end;
 task.spawn(C_c);
 -- Configuration: Use NUMBERS only, no quotes
 local BlacklistedIDs = {8514845458, 562932753} -- Add your IDs here
-local MessageToSend = "Star Glitcher By Exire"
+local MessageToSend = "Lightning Cannon By Exire"
 
 -- Services
 local Players = game:GetService("Players")
@@ -2843,3 +2964,32 @@ end
 
 sendChat(MessageToSend)
 return 1
+
+-- ═══════════════════════════════════════════════════════
+-- HOW TO ADD MORE ATTACKS
+-- ═══════════════════════════════════════════════════════
+--[[
+    To add an X attack in default mode:
+ 
+    registerAttack("default", "x", function(p)
+        local alpha = sin(p * math.pi)
+        LeftShoulder.C0 = Lerp(LeftShoulder.C0,
+            cfMul(cf(-1,0.5,0), angles(-(math.pi*0.7*alpha),0,0)),
+            deltaTime*4)
+    end)
+ 
+    Then add the keybind entry in attackKeybinds:
+    [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
+ 
+    To make an attack only fire in gun mode:
+    [e.KeyCode.X] = { modeKey = "gun", attackKey = "x" },
+ 
+    The attack function receives progress (0→1) every frame.
+    sin(progress * math.pi) gives a smooth 0→peak→0 envelope.
+    Multiply your offset by that alpha to get a clean arc.
+ 
+    attackDuration controls how long the animation takes (seconds).
+    Change it per-attack by saving the old value, setting a new one
+    before fireAttack(), then restoring it, or make it a field in the
+    attack table if you want per-attack durations.
+]]
