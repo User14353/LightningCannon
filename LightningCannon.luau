@@ -2580,19 +2580,6 @@ local function C_c()
 		local LeftHip=getJoint("Left Hip")
 		local Neck=getJoint("Neck")
 
-		attacks["f"] = attacks["f"] or {}
-		attacks["f"]["z"] = function(p)
-				local alpha = sin(p * math.pi)
-				RightShoulder.C0 = Lerp(RightShoulder.C0,
-						cfMul(cf(1,0.2,0), angles(-(math.pi*0.9*alpha),2.0,0)), deltaTime*5)
-				RootJoint.C0 = Lerp(RootJoint.C0,
-						cfMul(cf(0,0,0), angles(-1.56-0.15*alpha,0,-3.141592502593994)), deltaTime*5)
-		end
-
-		-- Add more modes/keys the same way:
-		-- registerAttack("default", "x", function(p) ... end)
-		-- registerAttack("f",       "x", function(p) ... end)
-
 		local gun                      = getPartFromMesh(6831441507, 6833003967)
 		local AJBackAccessory          = getPartJoint(gun)
 		local Pixie                    = getPartFromMesh(128216670, 150379943)
@@ -2601,6 +2588,25 @@ local function C_c()
 		local CrystalStaff             = getPartJoint(staff)
 		local rock                     = getPartFromMesh(4307568890, 4307568951)
 		local RockAccessory            = getPartJoint(rock)
+
+		attacks["f"] = attacks["f"] or {}
+		attacks["f"]["z"] = function(p)
+			RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0+0.025*sin(sine*20)),angles(-1.690860599383551,0,-3.141592502593994)),deltaTime)
+			Neck.C0=Lerp(Neck.C0,cfMul(cf(-0.1848053513911738,1,0),angles(-1.464800272747772,0,-3.141592502593994)),deltaTime)
+			LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-0.9586294073807569,-0.9072313810649675,-1.061425460012336-0.025*sin(sine*20)),angles(0.2539781041767064-0.02*sin(sine*20),-1.570796370506287,0)),deltaTime)
+			LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-0.4432223135964914,0.5890213815789469,-0.3903974566543313+0.1*sin(sine*20)),angles(-0.1353502565802174,-2.080185596147517,-1.593977602253932)),deltaTime)
+			RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1.448340164987664,-0.3646984434964367-0.025*sin(sine*20)),angles(-0.7830299123565023-0.02*sin(sine*20),1.570796370506287,0)),deltaTime)
+			RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(0.5376233552631584,0.5,0+0.1*sin(sine*20)),angles(1.583428120344262,1.486545123214642,-0.06896521958869251)),deltaTime)
+			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-1.97579634817023,0.5270010964912286,2.6171875),angles(-0,0,-0)),deltaTime)
+			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.556640625,26+50*sin(sine*25),-0.1183305706894187),angles(-0.15,0.04686378586849749,-0)),deltaTime)
+			AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
+			AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(0),rad(-120))
+			AJBackAccessory.Part1=getPart("Right Arm")
+		end
+
+		-- Add more modes/keys the same way:
+		-- registerAttack("default", "x", function(p) ... end)
+		-- registerAttack("f",       "x", function(p) ... end)
 	
 		local ModeV=""
 		t.setJumpPower(65)
