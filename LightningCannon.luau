@@ -2622,7 +2622,7 @@ local function C_c()
 			RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,-0.1809772692228613,0),angles(3.170657552728679-0.1*sin(sine*1.5),2.528360285681817,-0.4122203328217511)),deltaTime)
 			AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,-0.7)),deltaTime)
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
-			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
 			AJBackAccessory.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
 		end,
@@ -2635,7 +2635,7 @@ local function C_c()
 			RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,0.5,0),angles(0.9440709831408469,1.112718041998459,-0.8859411848630749)),deltaTime)
 			AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 			SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,15,-0.1002724319696426),angles(0,0,0)),deltaTime)
-			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-15,0.07364007830619812),angles(0,0,0)),deltaTime)
+			RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,15,0.07364007830619812),angles(0,0,0)),deltaTime)
 			AJBackAccessory.C0=cf(-1,0,0)*angles(rad(0),rad(0),rad(0))
 			AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
 		end,
