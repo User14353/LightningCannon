@@ -2592,7 +2592,7 @@ local function C_c()
 
 		attacks["f"] = attacks["f"] or {}
 		attacks["f"]["z"] = {
-    		duration = 5,  -- 5 second attack
+    		duration = 3,  -- 5 second attack
     		fn = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0+0.025*sin(sine*20)),angles(-1.690860599383551,0,-3.141592502593994)),deltaTime)
 				Neck.C0=Lerp(Neck.C0,cfMul(cf(-0.1848053513911738,1,0),angles(-1.464800272747772,0,-3.141592502593994)),deltaTime)
@@ -2603,7 +2603,7 @@ local function C_c()
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-1.97579634817023,0.5270010964912286,2.6171875),angles(-0,0,-0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.556640625,26+50*sin(sine*25),-0.1183305706894187),angles(-0.15,0.04686378586849749,-0)),deltaTime)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-				AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(0),rad(-120))
+				AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(-90),rad(-120))
 				AJBackAccessory.Part1=getPart("Right Arm")
 			end
 		}
