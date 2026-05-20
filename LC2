@@ -1879,7 +1879,7 @@ local reanimate=function()
 						insSet(cam,"CFrame",camcf)
 						if not attackActive then lerpsIdle() end
 						noYvelTime=min(noYvelTime+delta*0.3,1)
-						xzvel=xzvel*(1-noYvelTime)
+						if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 					elseif Yvel>0 then
 						pos=pos+v3_010*Yvel*delta
 						cfr=cfl(pos,pos+camcfLV*v3_101)
@@ -1907,7 +1907,7 @@ local reanimate=function()
 						insSet(cam,"CFrame",camcf)
 						if not attackActive then lerpsWalk() end
 						noYvelTime=min(noYvelTime+delta*0.3,1)
-						xzvel=xzvel*(1-noYvelTime)
+						if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 					elseif Yvel>0 then
 						pos=pos+(xzvel+v3_010*Yvel)*delta
 						cfr=cfl(pos,pos+camcfLV*v3_101)
@@ -1935,7 +1935,7 @@ local reanimate=function()
 					insSet(cam,"CFrame",camcf)
 					if not attackActive then lerpsIdle() end
 					noYvelTime=min(noYvelTime+delta*0.3,1)
-					xzvel=xzvel*(1-noYvelTime)
+					if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 				elseif Yvel>0 then
 					pos=pos+v3_010*Yvel*delta
 					cfr=cfl(pos,pos+camcfLV*v3_101)
@@ -1965,7 +1965,7 @@ local reanimate=function()
 						insSet(cam,"CFrame",camcf)
 						if not attackActive then lerpsIdle() end
 						noYvelTime=min(noYvelTime+delta*0.3,1)
-						xzvel=xzvel*(1-noYvelTime)
+						if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 					elseif Yvel>0 then
 						pos=pos+v3_010*Yvel*delta
 						cfr=cfl(pos,pos+camcfLV*v3_101)
@@ -1993,7 +1993,7 @@ local reanimate=function()
 						insSet(cam,"CFrame",camcf)
 						if not attackActive then lerpsWalk() end
 						noYvelTime=min(noYvelTime+delta*0.3,1)
-						xzvel=xzvel*(1-noYvelTime)
+						if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 					elseif Yvel>0 then
 						pos=pos+(xzvel+v3_010*Yvel)*delta
 						cfr=cfl(pos,pos+camcfLV*v3_101)
@@ -2021,7 +2021,7 @@ local reanimate=function()
 					insSet(cam,"CFrame",camcf)
 					if not attackActive then lerpsIdle() end
 					noYvelTime=min(noYvelTime+delta*0.3,1)
-					xzvel=xzvel*(1-noYvelTime)
+					if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 				elseif Yvel>0 then
 					pos=pos+v3_010*Yvel*delta
 					cfr=cfl(pos,pos+camcfLV*v3_101)
@@ -2051,7 +2051,7 @@ local reanimate=function()
 						insSet(cam,"CFrame",camcf)
 						if not attackActive then lerpsIdle() end
 						noYvelTime=min(noYvelTime+delta*0.3,1)
-						xzvel=xzvel*(1-noYvelTime)
+						if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 					elseif Yvel>0 then
 						pos=pos+v3_010*Yvel*delta
 						cfr=cfAdd(cfGet(cfr,"Rotation"),pos)
@@ -2079,7 +2079,7 @@ local reanimate=function()
 						insSet(cam,"CFrame",camcf)
 						if not attackActive then lerpsWalk() end
 						noYvelTime=min(noYvelTime+delta*0.3,1)
-						xzvel=xzvel*(1-noYvelTime)
+						if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 					elseif Yvel>0 then
 						pos=pos+(xzvel+(v3_010*Yvel))*delta
 						cfr=cfAdd(Lerp(cfGet(cfr,"Rotation"),cfl(v3_0,xzvel),deltaTime),pos)
@@ -2107,7 +2107,7 @@ local reanimate=function()
 					insSet(cam,"CFrame",camcf)
 					if not attackActive then lerpsIdle() end
 					noYvelTime=min(noYvelTime+delta*0.3,1)
-					xzvel=xzvel*(1-noYvelTime)
+					if not attackActive then xzvel=xzvel*(1-noYvelTime) end
 				elseif Yvel>0 then
 					pos=pos+v3_010*Yvel*delta
 					cfr=cfAdd(cfGet(cfr,"Rotation"),pos)
