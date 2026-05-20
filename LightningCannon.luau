@@ -2603,7 +2603,7 @@ local function C_c()
 					SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-1.97579634817023,0.5270010964912286,2.6171875),angles(-0,0,-0)),deltaTime)
 					RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.556640625,26+50*sin(sine*25),-0.1183305706894187),angles(-0.15,0.04686378586849749,-0)),deltaTime)
 					AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-					AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(-20),rad(-90))
+					AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(45),rad(-90))
 					AJBackAccessory.Part1=getPart("Right Arm")
 			end
 		}
