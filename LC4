@@ -2607,7 +2607,6 @@ local function C_c()
 					AJBackAccessory.Part1=getPart("Right Arm")
 			end
 		}
-		attacks["f"] = attacks["f"] or {}
 		attacks["f"]["x"] = {
     		duration = 5,
     		fn = function()
