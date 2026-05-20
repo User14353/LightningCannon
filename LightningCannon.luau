@@ -2431,7 +2431,7 @@ LMG2L["TextLabel_4"]["FontFace"] = Font.new([[rbxasset://fonts/families/GothamSS
 LMG2L["TextLabel_4"]["TextColor3"] = Color3.fromRGB(54, 17, 0);
 LMG2L["TextLabel_4"]["BackgroundTransparency"] = 0.699;
 LMG2L["TextLabel_4"]["Size"] = UDim2.new(0, 450, 0, 54);
-LMG2L["TextLabel_4"]["Text"] = [[Lightning Cannon]];
+LMG2L["TextLabel_4"]["Text"] = [[Personal Reanimate]];
 
 -- Players.cillfall.PlayerGui.ScreenGui.Frame.TextLabel.UICorner
 LMG2L["UICorner_5"] = Instance.new("UICorner", LMG2L["TextLabel_4"]);
@@ -2447,7 +2447,7 @@ LMG2L["TextLabel2_6"]["FontFace"] = Font.new([[rbxasset://fonts/families/GothamS
 LMG2L["TextLabel2_6"]["TextColor3"] = Color3.fromRGB(54, 17, 0);
 LMG2L["TextLabel2_6"]["BackgroundTransparency"] = 0.699;
 LMG2L["TextLabel2_6"]["Size"] = UDim2.new(0, 204, 0, 82);
-LMG2L["TextLabel2_6"]["Text"] = [[Lightning Cannon - Exire]];
+LMG2L["TextLabel2_6"]["Text"] = [[ my personal reanimation script - Exire]];
 LMG2L["TextLabel2_6"]["Name"] = [[TextLabel2]];
 LMG2L["TextLabel2_6"]["Position"] = UDim2.new(0, 14, 0, 76);
 
@@ -2603,7 +2603,7 @@ local function C_c()
 					SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-1.97579634817023,0.5270010964912286,2.6171875),angles(-0,0,-0)),deltaTime)
 					RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.556640625,26+50*sin(sine*25),-0.1183305706894187),angles(-0.15,0.04686378586849749,-0)),deltaTime)
 					AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-					AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(0),rad(-120))
+					AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(10),rad(-90))
 					AJBackAccessory.Part1=getPart("Right Arm")
 			end
 		}
