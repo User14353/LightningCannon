@@ -2746,7 +2746,8 @@ local function C_c()
 			-- Maps KeyCode → {mode, attackKey}
 			-- Add entries here to bind more keys in more modes.
 			local attackKeybinds = {
-					[e.KeyCode.Z] = { modeKey = nil, attackKey = "z" },
+					[e.KeyCode.Z] = { modeKey = f, attackKey = "z" },
+					[e.KeyCode.X] = { modeKey = "f", attackKey = "x" },
 					-- e.g. [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
 			}
 			-- modeKey = nil  means "fire for whatever current mode is active"
@@ -2832,8 +2833,8 @@ local function C_c()
 
 			-- Configuration: Link your GitHub raw URLs here
 			local SongLinks = {
-					["default"] = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunAway",
-					["f"]       = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunOut",
+					["default"] = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunAway?raw=true",
+					["f"]       = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunOut?raw=true",
 			}
 
 			function getmp3(modeName)
