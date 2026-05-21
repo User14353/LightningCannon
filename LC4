@@ -2996,7 +2996,7 @@ local function C_c()
 					local oscY = math.sin(clock * 0.9) * 0.004
 
 					-- Rotation oscillation  ±5 degrees, speed 0.45 (half of 0.9)
-					local rotDeg = math.sin(clock * 0.45) * 5
+					local rotDeg = math.sin(clock * 0.45) * 2
 
 					-- Move all bottom pieces together vertically
 					G2L["3"].Position = UDim2.new(0, 0, BASE_FADE_Y + oscY, 0)
