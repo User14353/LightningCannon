@@ -777,8 +777,6 @@ local charcons={}
 local flingtable={}
 local onnewcamera=nil
 local stopreanimate=function() 
-	HUD = game.Players.LocalPlayer.PlayerGui:WaitForChild("LightningCannonHUD")
-	HUD:Destroy()
 	if c then
 		c=nil
 		if permadeath then
@@ -828,6 +826,8 @@ local reanimate=function()
 	local flingvel = v3(15000,16000,15000) --the rotation velocity that ur character will have while flinging
 
 	if stopreanimate() then 
+		local HUD = game.Players.LocalPlayer.PlayerGui:WaitForChild("LightningCannonHUD")
+		HUD:Destroy()
 		local SoundService = game:GetService("SoundService")
 
 		for _, object in ipairs(SoundService:GetChildren()) do
