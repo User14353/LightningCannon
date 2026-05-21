@@ -2801,6 +2801,351 @@ local function C_c()
 					end
 			end
 
+			local RunService = game:GetService("RunService")
+			local Players = game:GetService("Players")
+
+			local G2L = {}
+
+			-- ScreenGui
+			G2L["1"] = Instance.new("ScreenGui", Players.LocalPlayer:WaitForChild("PlayerGui"))
+			G2L["1"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+			G2L["1"].ResetOnSpawn = false
+			G2L["1"].IgnoreGuiInset = true
+
+			-- ============================================================
+			-- FadeInThing (edge vignette frames, all scale-based)
+			-- ============================================================
+			G2L["2"] = Instance.new("Folder", G2L["1"])
+			G2L["2"].Name = "FadeInThing"
+
+			-- Bottom fade
+			G2L["3"] = Instance.new("Frame", G2L["1"])
+			G2L["3"].Name = "FadeBottom"
+			G2L["3"].BorderSizePixel = 0
+			G2L["3"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["3"].Size = UDim2.new(1, 0, 0.12862, 0)          -- 111/863 ≈ 0.12862
+			G2L["3"].Position = UDim2.new(0, 0, 0.87138, 0)
+			G2L["3"].BackgroundTransparency = 0.5
+			G2L["3"].ZIndex = 1
+			do
+					local g = Instance.new("UIGradient", G2L["3"])
+					g.Rotation = -90
+					g.Transparency = NumberSequence.new{
+							NumberSequenceKeypoint.new(0, 0),
+							NumberSequenceKeypoint.new(1, 1),
+					}
+					g.Color = ColorSequence.new{
+							ColorSequenceKeypoint.new(0,     Color3.fromRGB(95,  84,  158)),
+							ColorSequenceKeypoint.new(0.984, Color3.fromRGB(96,  85,  159)),
+							ColorSequenceKeypoint.new(1,     Color3.fromRGB(255, 255, 255)),
+					}
+			end
+
+			-- Right fade
+			G2L["5"] = Instance.new("Frame", G2L["1"])
+			G2L["5"].Name = "FadeRight"
+			G2L["5"].BorderSizePixel = 0
+			G2L["5"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["5"].Size = UDim2.new(0.19302, 0, 1, 0)          -- 271/1404 ≈ 0.19302
+			G2L["5"].Position = UDim2.new(0.80698, 0, 0, 0)
+			G2L["5"].BackgroundTransparency = 0.5
+			G2L["5"].ZIndex = 1
+			do
+					local g = Instance.new("UIGradient", G2L["5"])
+					g.Rotation = 180
+					g.Transparency = NumberSequence.new{
+							NumberSequenceKeypoint.new(0, 0),
+							NumberSequenceKeypoint.new(1, 1),
+					}
+					g.Color = ColorSequence.new{
+							ColorSequenceKeypoint.new(0,     Color3.fromRGB(95,  84,  158)),
+							ColorSequenceKeypoint.new(0.984, Color3.fromRGB(96,  85,  159)),
+							ColorSequenceKeypoint.new(1,     Color3.fromRGB(255, 255, 255)),
+					}
+			end
+
+			-- Top fade
+			G2L["7"] = Instance.new("Frame", G2L["1"])
+			G2L["7"].Name = "FadeTop"
+			G2L["7"].BorderSizePixel = 0
+			G2L["7"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["7"].Size = UDim2.new(1, 0, 0.14949, 0)          -- 129/863 ≈ 0.14949
+			G2L["7"].Position = UDim2.new(0, 0, 0, 0)
+			G2L["7"].BackgroundTransparency = 0.35
+			G2L["7"].ZIndex = 1
+			do
+					local g = Instance.new("UIGradient", G2L["7"])
+					g.Rotation = 90
+					g.Transparency = NumberSequence.new{
+							NumberSequenceKeypoint.new(0,     0),
+							NumberSequenceKeypoint.new(0.738, 0.55),
+							NumberSequenceKeypoint.new(1,     1),
+					}
+					g.Color = ColorSequence.new{
+							ColorSequenceKeypoint.new(0,     Color3.fromRGB(95,  84,  158)),
+							ColorSequenceKeypoint.new(0.984, Color3.fromRGB(96,  85,  159)),
+							ColorSequenceKeypoint.new(1,     Color3.fromRGB(255, 255, 255)),
+					}
+			end
+
+			-- Left fade
+			G2L["9"] = Instance.new("Frame", G2L["1"])
+			G2L["9"].Name = "FadeLeft"
+			G2L["9"].BorderSizePixel = 0
+			G2L["9"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["9"].Size = UDim2.new(0.19302, 0, 1, 0)
+			G2L["9"].Position = UDim2.new(-0.00499, 0, 0, 0)
+			G2L["9"].BackgroundTransparency = 0.5
+			G2L["9"].ZIndex = 1
+			do
+					local g = Instance.new("UIGradient", G2L["9"])
+					g.Transparency = NumberSequence.new{
+							NumberSequenceKeypoint.new(0, 0),
+							NumberSequenceKeypoint.new(1, 1),
+					}
+					g.Color = ColorSequence.new{
+							ColorSequenceKeypoint.new(0,     Color3.fromRGB(95,  84,  158)),
+							ColorSequenceKeypoint.new(0.984, Color3.fromRGB(96,  85,  159)),
+							ColorSequenceKeypoint.new(1,     Color3.fromRGB(255, 255, 255)),
+					}
+			end
+
+			-- ============================================================
+			-- Text folder (bottom bar labels + divider lines)
+			-- Positions are scale-based; sizes use scale for width, small
+			-- pixel offset for the 2px line thickness.
+			-- ============================================================
+			G2L["b"] = Instance.new("Folder", G2L["1"])
+			G2L["b"].Name = "Text"
+
+			-- Top divider line (scale Y pos, 2px pixel height)
+			G2L["c"] = Instance.new("Frame", G2L["1"])
+			G2L["c"].Name = "DividerTop"
+			G2L["c"].ZIndex = 5
+			G2L["c"].BorderSizePixel = 0
+			G2L["c"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["c"].Size = UDim2.new(0.41311, 0, 0, 2)          -- 580/1404 wide, 2px tall
+			G2L["c"].Position = UDim2.new(0.32079, 0, 0.90614, 0)
+
+			-- Bottom divider line
+			G2L["d"] = Instance.new("Frame", G2L["1"])
+			G2L["d"].Name = "DividerBottom"
+			G2L["d"].ZIndex = 5
+			G2L["d"].BorderSizePixel = 0
+			G2L["d"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["d"].Size = UDim2.new(0.41311, 0, 0, 2)
+			G2L["d"].Position = UDim2.new(0.32079, 0, 0.96871, 0)
+
+			-- Container frame for text labels (transparent, scale-sized)
+			G2L["e"] = Instance.new("Frame", G2L["1"])
+			G2L["e"].Name = "TextContainer"
+			G2L["e"].ZIndex = 5
+			G2L["e"].BorderSizePixel = 0
+			G2L["e"].BackgroundTransparency = 1
+			G2L["e"].Size = UDim2.new(0.41311, 0, 0.06027, 0)    -- 580/1404 w, 52/863 h
+			G2L["e"].Position = UDim2.new(0.32079, 0, 0.90973, 0)
+
+			-- [ Lightning Cannon ] label
+			G2L["f"] = Instance.new("TextLabel", G2L["e"])
+			G2L["f"].Name = "[ Lightning Cannon ] label"
+			G2L["f"].ZIndex = 5
+			G2L["f"].BorderSizePixel = 0
+			G2L["f"].BackgroundTransparency = 1
+			G2L["f"].Size = UDim2.new(1, 0, 0.55, 0)
+			G2L["f"].Position = UDim2.new(0, 0, 0, 0)
+			G2L["f"].TextScaled = true
+			G2L["f"].TextWrapped = true
+			G2L["f"].FontFace = Font.new([[rbxasset://fonts/families/PressStart2P.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+			G2L["f"].TextColor3 = Color3.fromRGB(212, 208, 255)
+			G2L["f"].Text = [[[ Lightning Cannon ]]
+
+			-- Exire's Reanimate label
+			G2L["10"] = Instance.new("TextLabel", G2L["e"])
+			G2L["10"].Name = "ExireLabel"
+			G2L["10"].ZIndex = 5
+			G2L["10"].BorderSizePixel = 0
+			G2L["10"].BackgroundTransparency = 1
+			G2L["10"].Size = UDim2.new(0.6, 0, 0.4, 0)
+			G2L["10"].Position = UDim2.new(0.2, 0, 0.58, 0)
+			G2L["10"].TextScaled = true
+			G2L["10"].TextWrapped = true
+			G2L["10"].FontFace = Font.new([[rbxasset://fonts/families/Michroma.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+			G2L["10"].TextColor3 = Color3.fromRGB(181, 176, 255)
+			G2L["10"].Text = [[Exire's Reanimate]]
+
+			-- ============================================================
+			-- TopGuiThing  (piano / crown shape, floats up & down)
+			-- Everything is scale-based relative to the ScreenGui.
+			-- ============================================================
+			G2L["11"] = Instance.new("Folder", G2L["1"])
+			G2L["11"].Name = "TopGuiThing"
+
+			-- Outer white card  (294×52 on 1404×863 → 0.2094 × 0.0603)
+			G2L["12"] = Instance.new("Frame", G2L["1"])
+			G2L["12"].Name = "TopCard"
+			G2L["12"].BorderSizePixel = 0
+			G2L["12"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["12"].Size = UDim2.new(0.20940, 0, 0.06025, 0)
+			G2L["12"].Position = UDim2.new(0.43376, 0, 0.0371, 0)
+			G2L["12"].ZIndex = 3
+			-- left wing
+			G2L["13"] = Instance.new("Frame", G2L["12"])
+			G2L["13"].BorderSizePixel = 0
+			G2L["13"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["13"].Size = UDim2.new(0.35034, 0, 0.90385, 0)
+			G2L["13"].Position = UDim2.new(0.02696, 0, 0.57127, 0)
+			G2L["13"].Rotation = 25
+			G2L["13"].ZIndex = 3
+			-- right wing
+			G2L["14"] = Instance.new("Frame", G2L["12"])
+			G2L["14"].BorderSizePixel = 0
+			G2L["14"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			G2L["14"].Size = UDim2.new(0.35034, 0, 0.90385, 0)
+			G2L["14"].Position = UDim2.new(0.62905, 0, 0.571, 0)
+			G2L["14"].Rotation = -25
+			G2L["14"].ZIndex = 3
+			-- black piano body
+			G2L["15"] = Instance.new("Frame", G2L["12"])
+			G2L["15"].BorderSizePixel = 0
+			G2L["15"].BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+			G2L["15"].Size = UDim2.new(0.95238, 0, 0.73077, 0)
+			G2L["15"].Position = UDim2.new(0.02696, 0, 0.13462, 0)
+			G2L["15"].ZIndex = 3
+			-- grey key bed
+			G2L["16"] = Instance.new("Frame", G2L["15"])
+			G2L["16"].BorderSizePixel = 0
+			G2L["16"].BackgroundColor3 = Color3.fromRGB(135, 140, 168)
+			G2L["16"].Size = UDim2.new(0.95, 0, 0.65789, 0)
+			G2L["16"].Position = UDim2.new(0.02338, 0, 0.16093, 0)
+			G2L["16"].ZIndex = 3
+			-- black keys (5 of them)
+			local keyXPos = {0.09105, 0.27902, 0.46699, 0.65496, 0.84293}
+			local keyHeights = {0.65789, 0.65789, 0.89474, 0.65789, 0.65789} -- middle key is taller
+			local keyYPos   = {0.00093, 0.00093, -0.11907, 0.00093, 0.00093}
+			for i = 1, 5 do
+					local k = Instance.new("Frame", G2L["16"])
+					k.BorderSizePixel = 0
+					k.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+					k.Size = UDim2.new(0.03008, 0, keyHeights[i], 0)
+					k.Position = UDim2.new(keyXPos[i], 0, keyYPos[i], 0)
+					k.ZIndex = 4
+			end
+
+			-- ============================================================
+			-- SongBars  (15 bars spanning full width, centered vertically
+			--            around Y=0.65, max height 0.18 scale units)
+			-- ============================================================
+			G2L["1d"] = Instance.new("Folder", G2L["1"])
+			G2L["1d"].Name = "SongBars"
+
+			local NUM_BARS = 15
+			-- Original bar X positions extracted from the script, converted
+			-- to scale (original used 0.07123 spacing on ~1404px wide screen)
+			-- We space them evenly across 0 to 1 (bars overflow at edges like original)
+			local BAR_W_SCALE  = 0.0712          -- ~100/1404
+			local BAR_GAP      = 0.0712          -- same spacing as original
+
+			-- bars go from X≈-0.142 to X≈1.066, evenly spaced at ~0.0713 apart
+			-- 15 bars, step = (1.066 - (-0.142)) / 14 = 0.08629
+			local firstX = -0.142
+			local stepX  = (1.066 - (-0.142)) / (NUM_BARS - 1)
+
+			local BASE_Y_SCALE = 0.62            -- bottom anchor of bars (was 0.534)
+			local MAX_H_SCALE  = 0.18            -- max bar height in scale units
+
+			local barFrames      = {}            -- main bar frame
+			local barTargetH     = {}            -- target height (scale)
+			local barCurrentH    = {}            -- current animated height (scale)
+			local barTimer       = {}            -- time until next random target
+
+			local function makeGradient(parent)
+					local g = Instance.new("UIGradient", parent)
+					g.Rotation = 90
+					g.Transparency = NumberSequence.new{
+							NumberSequenceKeypoint.new(0, 0),
+							NumberSequenceKeypoint.new(1, 1),
+					}
+					g.Color = ColorSequence.new{
+							ColorSequenceKeypoint.new(0, Color3.fromRGB(22, 0, 255)),
+							ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
+					}
+			end
+
+			for i = 1, NUM_BARS do
+					local xPos = firstX + (i - 1) * stepX
+
+					local bar = Instance.new("Frame", G2L["1"])
+					bar.Name = "SongBar"
+					bar.ZIndex = -10
+					bar.BorderSizePixel = 0
+					bar.BackgroundColor3 = Color3.fromRGB(68, 0, 183)
+					bar.BackgroundTransparency = 0.5
+					-- height will be driven by RenderStepped; start at a small value
+					local startH = 0.04 + math.random() * 0.06
+					bar.Size = UDim2.new(BAR_W_SCALE, 0, startH, 0)
+					bar.Position = UDim2.new(xPos, 0, BASE_Y_SCALE - startH, 0)
+
+					-- thin accent line near top of bar
+					local line = Instance.new("Frame", bar)
+					line.ZIndex = -10
+					line.BorderSizePixel = 0
+					line.BackgroundColor3 = Color3.fromRGB(68, 0, 183)
+					line.BackgroundTransparency = 0.5
+					line.Size = UDim2.new(1, 0, 0, 2)
+					line.Position = UDim2.new(0, 0, 0.04741, 0)
+
+					-- gradient overlay
+					local gFrame = Instance.new("Frame", bar)
+					gFrame.ZIndex = -10
+					gFrame.BorderSizePixel = 0
+					gFrame.BackgroundColor3 = Color3.fromRGB(68, 0, 183)
+					gFrame.BackgroundTransparency = 0.75
+					gFrame.Size = UDim2.new(1, 0, 0.806, 0)   -- 324/402
+					gFrame.Position = UDim2.new(0, 0, -0.002, 0)
+					makeGradient(gFrame)
+
+					barFrames[i]   = bar
+					barCurrentH[i] = startH
+					barTargetH[i]  = 0.04 + math.random() * 0.10
+					barTimer[i]    = math.random() * 2
+			end
+
+			-- ============================================================
+			-- RenderStepped animation loop
+			-- ============================================================
+			local clock = 0
+
+			RunService.RenderStepped:Connect(function(dt)
+					clock = clock + dt
+
+					-- ---- Song bar animation ----
+					for i = 1, NUM_BARS do
+							barTimer[i] = barTimer[i] - dt
+							if barTimer[i] <= 0 then
+									barTargetH[i] = 0.03 + math.random() * 0.12   -- gentle, not too tall
+									barTimer[i]   = 0.5 + math.random() * 1.2      -- slow change rate
+							end
+							-- smooth lerp toward target
+							barCurrentH[i] = barCurrentH[i] + (barTargetH[i] - barCurrentH[i]) * math.min(dt * 2.5, 1)
+
+							local h   = barCurrentH[i]
+							local xPos = firstX + (i - 1) * stepX
+							barFrames[i].Size     = UDim2.new(BAR_W_SCALE, 0, h, 0)
+							barFrames[i].Position = UDim2.new(xPos, 0, BASE_Y_SCALE - h, 0)
+					end
+
+					-- ---- Top card float (gentle up/down) ----
+					local floatOffset = math.sin(clock * 1.1) * 0.008   -- ±0.8% of screen height
+					G2L["12"].Position = UDim2.new(0.43376, 0, 0.0371 + floatOffset, 0)
+
+					-- ---- Bottom bar oscillation ----
+					local oscOffset = math.sin(clock * 0.9) * 0.004     -- ±0.4% of screen height
+					local baseY = 0.90614 + oscOffset
+					G2L["c"].Position = UDim2.new(0.32079, 0, baseY, 0)
+					G2L["d"].Position = UDim2.new(0.32079, 0, baseY + 0.06257, 0)
+					G2L["e"].Position = UDim2.new(0.32079, 0, baseY + 0.00359, 0)
+					G2L["3"].Position = UDim2.new(0, 0, (0.87138 + oscOffset), 0)
+			end)
 
 			if _G.HatInputConnection then
 					_G.HatInputConnection:Disconnect()
