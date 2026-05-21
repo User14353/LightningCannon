@@ -777,7 +777,7 @@ local charcons={}
 local flingtable={}
 local onnewcamera=nil
 local stopreanimate=function() 
-	HUD = game.Players.LocalPlayer.PlayerGui:FindFirstChild("LightningCannonHUD")
+	HUD = game.Players.LocalPlayer.PlayerGui:WaitForChild("LightningCannonHUD")
 	HUD:Destroy()
 	if c then
 		c=nil
