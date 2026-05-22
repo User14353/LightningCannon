@@ -1921,7 +1921,7 @@
 			local armCF = cframes[rightArmPart]
 			if not armCF then return end
 
-			local gunTipCF = cfMul(armCF, cf(1, 0.5, 0)) * angles(rad(110), rad(90), 0)
+			local gunTipCF = cfMul(armCF, cf(1, 0.5, 0)) * angles(rad(100), rad(90), 0)
 			lightningParts.LS.CFrame = gunTipCF
 
 			local now = osclock()
@@ -3158,7 +3158,7 @@
 				G2L["10"].TextWrapped = true
 				G2L["10"].FontFace = Font.new([[rbxasset://fonts/families/Michroma.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal)
 				G2L["10"].TextColor3 = Color3.fromRGB(181, 176, 255)
-				G2L["10"].Text = [[Exire's Reanimate]]
+				G2L["10"].Text = [[Exire Reanimate]]
 
 				-- ============================================================
 				-- RenderStepped animation loop
