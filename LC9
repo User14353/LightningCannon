@@ -2641,6 +2641,7 @@
 			getLightningActive = function() return lightningActive end,
 			setLightningActive = function(v) lightningActive = v end,
       spawnHatTrail = spawnHatTrail,
+      getAttackProgress = function() return attackProgress end,
 		}
 	end
 	local TweenService = game:GetService("TweenService")
@@ -2798,6 +2799,7 @@
 			if type(t) ~= "table" then return end
 			local spawnHatTrail = t.spawnHatTrail
 			local spawnLightning = t.spawnLightning
+      local getAttackProgress = t.getAttackProgress
 			local destroyLightning = t.destroyLightning
 			local function getLightningActive() return t.getLightningActive() end
 			local function setLightningActive(v) t.setLightningActive(v) end
@@ -2895,9 +2897,10 @@
           trailSpawnRate    = 2,       -- spawn a ghost every N * 0.1s (1=every frame, 2=every other, etc)
           fn = function()
             -- read config from the attack def itself
+            local progress = getAttackProgress()
             local attackDef = attacks["f"]["c"]
 
-            if math.floor(attackProgress * 10) % attackDef.trailSpawnRate == 0 then
+            if math.floor(progress * 10) % attackDef.trailSpawnRate == 0 then
                 spawnHatTrail(attackDef.trailFadeDuration, attackDef.trailStartAlpha)
             end
 
