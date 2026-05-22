@@ -1977,7 +1977,7 @@
     end))
 
     local function spawnHatTrail(fadeDuration, startAlpha)
-        fadeDuration = fadeDuration or 0.6  -- fallback defaults
+        fadeDuration = fadeDuration or 0.6
         startAlpha   = startAlpha   or 0.3
 
         for partTable, partCF in next, cframes do
@@ -1986,11 +1986,14 @@
                 local ok, clone = pcall(Clone, realPart)
                 if not ok or not clone then continue end
 
+                -- Handle both MeshPart and SpecialMesh parts safely
                 local mesh = FindFirstChildOfClass(clone, "SpecialMesh")
-                ClearAllChildren(clone)
+                pcall(ClearAllChildren, clone) -- pcall in case children are locked
                 if mesh then
-                    insSet(mesh, "TextureId", "")
-                    insSet(mesh, "Parent", clone)
+                    pcall(function()
+                        insSet(mesh, "TextureId", "")
+                        insSet(mesh, "Parent", clone)
+                    end)
                 end
 
                 insSet(clone, "Anchored",     true)
@@ -2010,7 +2013,7 @@
                     clone             = clone,
                     startTime         = osclock(),
                     startTransparency = startAlpha,
-                    fadeDuration      = fadeDuration,  -- stored per-clone so mixed durations work fine
+                    fadeDuration      = fadeDuration,
                 })
             end
         end
