@@ -1921,7 +1921,7 @@
 			local armCF = cframes[rightArmPart]
 			if not armCF then return end
 
-			local gunTipCF = cfMul(armCF, cf(1, 0.5, 0)) * angles(rad(-90), rad(90), 0)
+			local gunTipCF = cfMul(armCF, cf(1, 0.5, 0)) * angles(rad(90), rad(90), 0)
 			lightningParts.LS.CFrame = gunTipCF
 
 			local now = osclock()
