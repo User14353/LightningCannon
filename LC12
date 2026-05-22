@@ -2788,21 +2788,27 @@
         Distance = Distance or 5
         Amount = Amount or 8
 
+        local old = GunTip.CFrame
+
         for i = 1, Amount do
-          local angle = math.rad((360 / Amount) * i)
+          local angle = rad((360 / Amount) * i)
 
-          local offset = Vector3.new(
-            math.cos(angle) * Distance,
-            0,
-            math.sin(angle) * Distance
+          GunTip.CFrame = cfMul(
+            old,
+            cf(
+              cos(angle) * Distance,
+              0,
+              sin(angle) * Distance
+            )
           )
 
-          spawnLightning(
-            gun.Position + offset,
-            gun.Position + offset
-          )
+          destroyLightning()
+          spawnLightning()
         end
+
+        GunTip.CFrame = old
       end
+      
 			attacks["f"] = attacks["f"] or {}
 			attacks["f"]["z"] = {
 					duration = 3,
