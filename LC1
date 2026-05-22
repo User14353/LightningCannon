@@ -2969,8 +2969,9 @@
 				-- Maps KeyCode → {mode, attackKey}
 				-- Add entries here to bind more keys in more modes.
 				local attackKeybinds = {
-						[e.KeyCode.Z] = { modeKey = f, attackKey = "z" },
+						[e.KeyCode.Z] = { modeKey = "f", attackKey = "z" },
 						[e.KeyCode.X] = { modeKey = "f", attackKey = "x" },
+            [e.KeyCode.C] = { modeKey = "f", attackKey = "c" },
 						-- e.g. [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
 				}
 				-- modeKey = nil  means "fire for whatever current mode is active"
