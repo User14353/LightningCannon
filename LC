@@ -1775,6 +1775,112 @@ local reanimate=function()
 
 	local noYvelTime=1
 	local lastsine=sine
+	-- Lightning state — declared here so mainFunction can close over them
+	local lightningActive = false
+	local lightningParts = nil
+	local lastLightningRotate = 0
+
+local function destroyLightning()
+		if lightningParts then
+			if lightningParts.LS and lightningParts.LS.Parent then
+				Destroy(lightningParts.LS)
+			end
+			lightningParts = nil
+		end
+		lightningActive = false
+	end
+
+	local function spawnLightning()
+		if lightningParts then return end
+
+		local LS = Instance.new("Part")
+		LS.Name = "LightningStart"
+		LS.Anchored = true
+		LS.CanCollide = false
+		LS.CanQuery = false
+		LS.CanTouch = false
+		LS.Transparency = 1
+		LS.Size = Vector3.new(0.1, 0.1, 0.1)
+		LS.Massless = true
+		LS.Parent = ws
+
+		local LC = Instance.new("Part")
+		LC.Name = "LightningCenter"
+		LC.Anchored = true
+		LC.CanCollide = false
+		LC.CanQuery = false
+		LC.CanTouch = false
+		LC.Transparency = 1
+		LC.Size = Vector3.new(0.1, 0.1, 0.1)
+		LC.Massless = true
+		LC.Parent = LS
+
+		local boltData = {
+			{cf(-129.1,8.13,15.62,-0.97,-0.21,-0.13,0.16,-0.93,0.34,-0.19,0.31,0.93)},
+			{cf(-129.07,7.73,17.45,-0.98,-0.16,-0.11,-0.01,-0.5,0.87,-0.19,0.85,0.48)},
+			{cf(-117.84,8.02,15.72,-0.97,0.22,0.07,-0.13,-0.78,0.62,0.19,0.59,0.79)},
+			{cf(-118.62,8.25,18.13,-0.97,0.17,0.19,0.21,0.08,0.97,0.15,0.98,-0.12)},
+			{cf(-129.04,10.99,15.4,-0.92,-0.29,-0.28,-0.35,0.27,0.9,-0.18,0.92,-0.35)},
+			{cf(-129.23,10.69,13.89,-0.97,-0.24,-0.03,-0.24,0.96,0.15,-0.01,0.16,-0.99)},
+			{cf(-130.02,9.5,16.38,-0.89,-0.45,-0.07,0,-0.16,0.99,-0.46,0.88,0.14)},
+			{cf(-129.52,10.37,15.09,0.9,-0.44,-0.03,0.23,0.51,-0.83,0.38,0.73,0.56)},
+			{cf(-129.6,9.07,15.6,0.9,-0.44,0.03,0.43,0.87,-0.26,0.09,0.24,0.97)},
+			{cf(-130.01,9.25,17.17,-0.91,-0.41,-0.11,-0.31,0.46,0.83,-0.29,0.79,-0.54)},
+			{cf(-129.38,8.51,14.48,-0.96,-0.28,-0.08,-0.2,0.82,-0.53,0.21,-0.5,-0.84)},
+			{cf(-129.13,9.74,15.41,-0.91,-0.26,-0.33,-0.39,0.81,0.45,0.15,0.53,-0.83)},
+		}
+
+		local lcOrigin = cf(-92.32, 8.71, 17.07)
+		local bolts = {}
+		for _, data in ipairs(boltData) do
+			local bolt = Instance.new("Part")
+			bolt.Anchored = true
+			bolt.CanCollide = false
+			bolt.CanQuery = false
+			bolt.CanTouch = false
+			bolt.Material = Enum.Material.Neon
+			bolt.Transparency = 0.3
+			bolt.Color = Color3.fromRGB(180, 170, 255)
+			bolt.Size = Vector3.new(0.2, 0.2, 2)
+			bolt.Massless = true
+			bolt:SetAttribute("RelCFrame", Inverse(lcOrigin) * data[1])
+			bolt.Parent = LC
+			tinsert(bolts, bolt)
+		end
+
+		lightningParts = { LS = LS, LC = LC, bolts = bolts }
+	end
+
+	-- Lightning heartbeat — all variables in same reanimate() scope
+	tinsert(cons, Connect(heartbeat, function()
+		if not lightningActive or not lightningParts then return end
+		if not c then destroyLightning() return end
+
+		local rightArmPart = getPart("Right Arm")
+		if not rightArmPart then return end
+
+		local armCF = cframes[rightArmPart]
+		if not armCF then return end
+
+		local gunTipCF = cfMul(armCF, cf(0, -1.5, 0))
+		lightningParts.LS.CFrame = gunTipCF
+
+		local now = osclock()
+		if now - lastLightningRotate >= 0.1 then
+			lastLightningRotate = now
+			local randX = mrandom(0, 628) / 100
+			local lcCF = cfMul(gunTipCF, angles(randX, 0, 0))
+			lightningParts.LC.CFrame = lcCF
+
+			for _, bolt in ipairs(lightningParts.bolts) do
+				local relCF = bolt:GetAttribute("RelCFrame")
+				if relCF then
+					bolt.CFrame = cfMul(lcCF, relCF)
+				end
+			end
+		end
+	end))
+
 	-- Attack state (read inside mainFunction's lerp step)
 	local attackActive = false
 	local attackProgress = 0       -- 0..1 drives the lerp weight
@@ -2240,6 +2346,10 @@ local reanimate=function()
 		    if attackProgress >= 1 then
 		        attackProgress = 1
 		        attackActive = false
+		        -- Auto-kill lightning when attack finishes
+		        if lightningActive then
+		            destroyLightning()
+		        end
 		    end
 		    local modeAttacks = attacks[currentAttackMode]
 		    if modeAttacks then
@@ -2391,7 +2501,11 @@ local reanimate=function()
 		isFirstPerson=isFirstPerson,
 		setHipHeight=setHipHeight,
     fireAttack = fireAttack,
-    attacks = attacks,
+		attacks = attacks,
+		spawnLightning = spawnLightning,
+		destroyLightning = destroyLightning,
+		getLightningActive = function() return lightningActive end,
+		setLightningActive = function(v) lightningActive = v end,
 	}
 end
 local TweenService = game:GetService("TweenService")
@@ -2547,6 +2661,10 @@ local function C_c()
 	reBtn.MouseButton1Click:Connect(function()
 		local t=reanimate()
 		if type(t) ~= "table" then return end
+		local spawnLightning = t.spawnLightning
+		local destroyLightning = t.destroyLightning
+		local function getLightningActive() return t.getLightningActive() end
+		local function setLightningActive(v) t.setLightningActive(v) end
 		local fireAttack = t.fireAttack
 		local attacks = t.attacks
 		local velYchg=t.velYchg 
@@ -2596,6 +2714,11 @@ local function C_c()
 		attacks["f"]["z"] = {
     		duration = 3,
     		fn = function()
+					if not getLightningActive() then
+							setLightningActive(true)
+							spawnLightning()
+					end
+
 					RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0+0.025*sin(sine*20)),angles(-1.690860599383551,0,-3.141592502593994)),deltaTime)
 					Neck.C0=Lerp(Neck.C0,cfMul(cf(-0.1848053513911738,1,0),angles(-1.464800272747772,0,-3.141592502593994)),deltaTime)
 					LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-0.9586294073807569,-0.9072313810649675,-1.061425460012336-0.025*sin(sine*20)),angles(0.2539781041767064-0.02*sin(sine*20),-1.570796370506287,0)),deltaTime)
@@ -2612,6 +2735,10 @@ local function C_c()
 		attacks["f"]["x"] = {
     		duration = 5,
     		fn = function()
+					if getLightningActive() then
+							destroyLightning()
+					end
+
 					RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0),angles(-1.5+0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
 					Neck.C0=Lerp(Neck.C0,cfMul(cf(0,1,0),angles(-0.8372137468970156-0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
 					LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1,-1.38009322317023,0.1504248903508776),angles(-0.9645947041647291-0.07000000000000001*sin(sine*2),-1.570796370506287,0)),deltaTime)
