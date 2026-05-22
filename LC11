@@ -1954,7 +1954,67 @@
 				end
 			end
 		end))
+    -- Hat Trail heartbeat
+    local hatTrailFadeDuration = 0.6 -- << change this to control fade speed
+    local hatTrailQueue = {} -- stores {clone, startTime, startTransparency}
 
+    tinsert(cons, Connect(heartbeat, function()
+        local now = osclock()
+        local i = 1
+        while i <= #hatTrailQueue do
+            local entry = hatTrailQueue[i]
+            local progress = (now - entry.startTime) / entry.fadeDuration  -- uses per-clone duration
+            if progress >= 1 then
+                if entry.clone and entry.clone.Parent then
+                    Destroy(entry.clone)
+                end
+                table.remove(hatTrailQueue, i)
+            else
+                insSet(entry.clone, "Transparency", entry.startTransparency + (1 - entry.startTransparency) * progress)
+                i = i + 1
+            end
+        end
+    end))
+
+    local function spawnHatTrail(fadeDuration, startAlpha)
+        fadeDuration = fadeDuration or 0.6  -- fallback defaults
+        startAlpha   = startAlpha   or 0.3
+
+        for partTable, partCF in next, cframes do
+            local realPart = partTable.p
+            if realPart and partTable.m then
+                local ok, clone = pcall(Clone, realPart)
+                if not ok or not clone then continue end
+
+                local mesh = FindFirstChildOfClass(clone, "SpecialMesh")
+                ClearAllChildren(clone)
+                if mesh then
+                    insSet(mesh, "TextureId", "")
+                    insSet(mesh, "Parent", clone)
+                end
+
+                insSet(clone, "Anchored",     true)
+                insSet(clone, "CanCollide",   false)
+                insSet(clone, "CanQuery",     false)
+                insSet(clone, "CanTouch",     false)
+                insSet(clone, "CastShadow",   false)
+                insSet(clone, "Color",        c3(1, 1, 1))
+                insSet(clone, "Material",     e.Material.SmoothPlastic)
+                insSet(clone, "Transparency", startAlpha)
+                insSet(clone, "CFrame",       partCF)
+                insSet(clone, "Name",         "HatTrailClone")
+                insSet(clone, "Archivable",   false)
+                insSet(clone, "Parent",       ws)
+
+                tinsert(hatTrailQueue, {
+                    clone             = clone,
+                    startTime         = osclock(),
+                    startTransparency = startAlpha,
+                    fadeDuration      = fadeDuration,  -- stored per-clone so mixed durations work fine
+                })
+            end
+        end
+    end
 		-- Attack state (read inside mainFunction's lerp step)
 		local attackActive = false
 		local attackProgress = 0       -- 0..1 drives the lerp weight
@@ -2580,6 +2640,7 @@
 			destroyLightning = destroyLightning,
 			getLightningActive = function() return lightningActive end,
 			setLightningActive = function(v) lightningActive = v end,
+      spawnHatTrail = spawnHatTrail,
 		}
 	end
 	local TweenService = game:GetService("TweenService")
@@ -2830,15 +2891,18 @@
 			}
       attacks["f"]["c"] = {
 					duration = 1,
-					fn = function()
-            local rootCF = cframes[RootJoint.Part0]
-            if rootCF then
-                local lookVec = cfGet(rootCF, "LookVector") * v3_101
-                local newPos = cfGet(rootCF, "Position") + lookVec * 4 * deltaTime
-                setCfr(cfAdd(cfGet(rootCF, "Rotation"), newPos))
+          trailFadeDuration = 0.6,    -- how long each ghost clone takes to fade
+          trailStartAlpha   = 0.3,    -- starting transparency of each clone (0=opaque, 1=invisible)
+          trailSpawnRate    = 2,       -- spawn a ghost every N * 0.1s (1=every frame, 2=every other, etc)
+          fn = function()
+            -- read config from the attack def itself
+            local attackDef = attacks["f"]["c"]
+
+            if math.floor(attackProgress * 10) % attackDef.trailSpawnRate == 0 then
+                spawnHatTrail(attackDef.trailFadeDuration, attackDef.trailStartAlpha)
             end
 
-            local fw,rt=velbycfrvec() *20
+            local fw,rt=velbycfrvec()
 
             RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0.06727519788240155,0.8468119303385411,0),angles(-2.303447080643997+0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
             Neck.C0=Lerp(Neck.C0,cfMul(cf(0.04300301535087758,1,0),angles(-0.8645562816424857-0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
