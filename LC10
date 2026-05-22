@@ -2796,6 +2796,7 @@
 		reBtn.MouseButton1Click:Connect(function()
 			local t=reanimate()
 			if type(t) ~= "table" then return end
+			local spawnHatTrail = t.spawnHatTrail
 			local spawnLightning = t.spawnLightning
 			local destroyLightning = t.destroyLightning
 			local function getLightningActive() return t.getLightningActive() end
@@ -2873,8 +2874,6 @@
 						if not getLightningActive() then
 								setLightningActive(true)
 								spawnLightning()
-                spawnLightning()
-                spawnLightning()
 						end
 						RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0),angles(-1.5+0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
 						Neck.C0=Lerp(Neck.C0,cfMul(cf(0,1,0),angles(-0.8372137468970156-0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
@@ -2890,7 +2889,7 @@
 				end
 			}
       attacks["f"]["c"] = {
-					duration = 1,
+			duration = 1,
           trailFadeDuration = 0.6,    -- how long each ghost clone takes to fade
           trailStartAlpha   = 0.3,    -- starting transparency of each clone (0=opaque, 1=invisible)
           trailSpawnRate    = 2,       -- spawn a ghost every N * 0.1s (1=every frame, 2=every other, etc)
@@ -2901,8 +2900,6 @@
             if math.floor(attackProgress * 10) % attackDef.trailSpawnRate == 0 then
                 spawnHatTrail(attackDef.trailFadeDuration, attackDef.trailStartAlpha)
             end
-
-            local fw,rt=velbycfrvec()
 
             RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0.06727519788240155,0.8468119303385411,0),angles(-2.303447080643997+0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
             Neck.C0=Lerp(Neck.C0,cfMul(cf(0.04300301535087758,1,0),angles(-0.8645562816424857-0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
