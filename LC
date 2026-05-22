@@ -2828,6 +2828,24 @@
 						AJBackAccessory.Part1=getPart("Right Arm")
 				end
 			}
+      attacks["f"]["c"] = {
+					duration = 1,
+					fn = function()
+            local fw,rt=velbycfrvec() *20
+
+            RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0.06727519788240155,0.8468119303385411,0),angles(-2.303447080643997+0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
+            Neck.C0=Lerp(Neck.C0,cfMul(cf(0.04300301535087758,1,0),angles(-0.8645562816424857-0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
+            LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1.096491228070176,-0.4452782346491233,-1.004946524636787),angles(-0.6815550648420938-0.1*sin(sine*4),-1.323852331888956,0)),deltaTime)
+            LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-1,0.5,0),angles(-0.6815550648420938-0.1*sin(sine*4),-1.110349790957513-0.1*sin(sine*2),0)),deltaTime)
+            RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1,0),angles(-0.8035536333803845-0.1*sin(sine*4),1.125134539998648-0.1*sin(sine*4+-0.7686660261097682),0)),deltaTime)
+            RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,0.5,0),angles(-0.6815550648420938-0.1*sin(sine*4),1.247136472529894-0.1*sin(sine*2+0.1),0)),deltaTime)
+            RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-5,5,-5),angles(-0,(0+sine*25),-0)),deltaTime)
+            SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-5,2.28452715957374,-5),angles(4.647009777286977,(0+sine*20),-0)),deltaTime)
+            AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
+						AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(30),rad(-90))
+						AJBackAccessory.Part1=getPart("Right Arm")
+				end
+			}
 			-- Add more modes/keys the same way:
 			-- registerAttack("default", "x", function(p) ... end)
 			-- registerAttack("f",       "x", function(p) ... end)
