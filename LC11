@@ -2784,31 +2784,6 @@
 			local rock                     = getPartFromMesh(4307568890, 4307568951)
 			local RockAccessory            = getPartJoint(rock)
 
-      local function CircLightning(Distance, Amount)
-        Distance = Distance or 5
-        Amount = Amount or 8
-
-        local old = GunTip.CFrame
-
-        for i = 1, Amount do
-          local angle = rad((360 / Amount) * i)
-
-          GunTip.CFrame = cfMul(
-            old,
-            cf(
-              cos(angle) * Distance,
-              0,
-              sin(angle) * Distance
-            )
-          )
-
-          destroyLightning()
-          spawnLightning()
-        end
-
-        GunTip.CFrame = old
-      end
-      
 			attacks["f"] = attacks["f"] or {}
 			attacks["f"]["z"] = {
 					duration = 3,
@@ -2834,8 +2809,12 @@
 			attacks["f"]["x"] = {
 					duration = 5,
 					fn = function()
-            CircLightning(20, 24)
-
+						if not getLightningActive() then
+								setLightningActive(true)
+								spawnLightning()
+                spawnLightning()
+                spawnLightning()
+						end
 						RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0),angles(-1.5+0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
 						Neck.C0=Lerp(Neck.C0,cfMul(cf(0,1,0),angles(-0.8372137468970156-0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
 						LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1,-1.38009322317023,0.1504248903508776),angles(-0.9645947041647291-0.07000000000000001*sin(sine*2),-1.570796370506287,0)),deltaTime)
