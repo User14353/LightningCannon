@@ -1891,7 +1891,7 @@
 				}
 
 				local bolts = {}
-				for _, data in ipairs(boltData) do
+				for idx, data in ipairs(boltData) do
 						local bolt = Instance.new("Part")
 						bolt.Anchored = true
 						bolt.CanCollide = false
@@ -1900,9 +1900,24 @@
 						bolt.Material = Enum.Material.Neon
 						bolt.Transparency = 0.3
 						bolt.Color = Color3.fromRGB(180, 170, 255)
-						bolt.Size = Vector3.new(data[2], data[3], data[4])
 						bolt.Massless = true
-						bolt:SetAttribute("RelCFrame", lsInv * data[1])
+
+						-- Point this bolt toward the next one, or keep its own rotation for the last
+						local nextData = boltData[idx + 1]
+						local thisCF = data[1]
+						local relCF
+						if nextData then
+								local thisPos = thisCF.Position
+								local nextPos = nextData[1].Position
+								local dist = (nextPos - thisPos).Magnitude
+								bolt.Size = Vector3.new(0.2, 0.2, dist)
+								relCF = lsInv * CFrame.lookAt(thisPos + (nextPos - thisPos) * 0.5, nextPos)
+						else
+								bolt.Size = Vector3.new(0.2, 0.2, 3)
+								relCF = lsInv * thisCF
+						end
+
+						bolt:SetAttribute("RelCFrame", relCF)
 						bolt.Parent = LC
 						tinsert(bolts, bolt)
 				end
