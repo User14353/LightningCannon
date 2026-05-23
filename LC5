@@ -2854,6 +2854,12 @@
 			local rock                     = getPartFromMesh(4307568890, 4307568951)
 			local RockAccessory            = getPartJoint(rock)
 
+
+
+
+
+
+			--[[
       local function soundFromLink(link)
           local folder = "ExiresGlitcher"
           if isfolder and not isfolder(folder) then makefolder(folder) end
@@ -2874,7 +2880,7 @@
           sound.Looped = false
           sound.Parent = game:GetService("SoundService")
           return sound
-      end
+      end]]
 
       attacks["f"] = attacks["f"] or {}
       attacks["f"]["z"] = {
@@ -3009,12 +3015,345 @@
               AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
               AJBackAccessory.Part1 = getPart("Right Arm")
               twait(1.5)
+							-- VFX Animator export  (v1.1 bugfixed)
+							local RunService = game:GetService('RunService')
+							local lp = game:GetService('Players').LocalPlayer
+							local function getP(n)
+									local c = lp.Character;
+									return c and (c:FindFirstChild(n) or c:FindFirstChild(n, true))
+							end
+							local _vfxI = {}
+							local _vfxC = {} -- instances / connections
+							local function cleanupVFX()
+									for _, c in ipairs(_vfxC) do
+											c:Disconnect()
+									end
+									_vfxC = {}
+									for _, i in ipairs(_vfxI) do
+											if i and i.Parent then
+													i:Destroy()
+											end
+									end
+									_vfxI = {}
+							end
+
+							do -- Part 1 (Part)
+									local vfx_1 = Instance.new('Part')
+									vfx_1.Name = 'Part_1'
+									vfx_1.Anchored = true
+									vfx_1.CanCollide = false
+									vfx_1.CanQuery = false
+									vfx_1.CanTouch = false
+									vfx_1.CastShadow = false
+									vfx_1.Color = Color3.fromRGB(255, 0, 0)
+									vfx_1.Material = Enum.Material.Neon
+									vfx_1.Transparency = 0.2152
+									vfx_1.Shape = Enum.PartType.Ball
+									vfx_1.Size = Vector3.new(6.952, 9.598, 7.953)
+									vfx_1.Parent = workspace
+									table.insert(_vfxI, vfx_1)
+									local _s1, _ia1 = 0, 0
+									local _c1 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_1.Parent then
+													return
+											end
+											_s1 = _s1 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_1.CFrame = vfx_1:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 4 * math.sin(_s1 * 8.888 * 2 * math.pi))
+											vfx_1.Size = Vector3.new(6.952 * _sc, 9.598 * _sc, 7.953 * _sc)
+									end)
+									table.insert(_vfxC, _c1)
+							end
+
+							do -- Part 1 (copy) (Part)
+									local vfx_3 = Instance.new('Part')
+									vfx_3.Name = 'Part_1_(copy)'
+									vfx_3.Anchored = true
+									vfx_3.CanCollide = false
+									vfx_3.CanQuery = false
+									vfx_3.CanTouch = false
+									vfx_3.CastShadow = false
+									vfx_3.Color = Color3.fromRGB(155, 100, 100)
+									vfx_3.Material = Enum.Material.Neon
+									vfx_3.Transparency = 0.1628
+									vfx_3.Shape = Enum.PartType.Ball
+									vfx_3.Size = Vector3.new(6.952, 9.598, 7.953)
+									vfx_3.Parent = workspace
+									table.insert(_vfxI, vfx_3)
+									local _s3, _ia3 = 0, 0
+									local _c3 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_3.Parent then
+													return
+											end
+											_s3 = _s3 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_3.CFrame = vfx_3:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 3 * math.sin(_s3 * 8.888 * 2 * math.pi))
+											vfx_3.Size = Vector3.new(6.952 * _sc, 9.598 * _sc, 7.953 * _sc)
+									end)
+									table.insert(_vfxC, _c3)
+							end
+
+							do -- Part 1 (copy) (copy) (Part)
+									local vfx_4 = Instance.new('Part')
+									vfx_4.Name = 'Part_1_(copy)_(copy)'
+									vfx_4.Anchored = true
+									vfx_4.CanCollide = false
+									vfx_4.CanQuery = false
+									vfx_4.CanTouch = false
+									vfx_4.CastShadow = false
+									vfx_4.Color = Color3.fromRGB(155, 100, 100)
+									vfx_4.Material = Enum.Material.Neon
+									vfx_4.Transparency = 0.1628
+									vfx_4.Shape = Enum.PartType.Ball
+									vfx_4.Size = Vector3.new(6.952, 9.598, 7.953)
+									vfx_4.Parent = workspace
+									table.insert(_vfxI, vfx_4)
+									local _s4, _ia4 = 0, 0
+									local _c4 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_4.Parent then
+													return
+											end
+											_s4 = _s4 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_4.CFrame = vfx_4:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 3 * math.sin(_s4 * 7.893 * 2 * math.pi))
+											vfx_4.Size = Vector3.new(6.952 * _sc, 9.598 * _sc, 7.953 * _sc)
+									end)
+									table.insert(_vfxC, _c4)
+							end
+
+							do -- Part 1 (copy) (Part)
+									local vfx_5 = Instance.new('Part')
+									vfx_5.Name = 'Part_1_(copy)'
+									vfx_5.Anchored = true
+									vfx_5.CanCollide = false
+									vfx_5.CanQuery = false
+									vfx_5.CanTouch = false
+									vfx_5.CastShadow = false
+									vfx_5.Color = Color3.fromRGB(255, 0, 0)
+									vfx_5.Material = Enum.Material.Neon
+									vfx_5.Transparency = 0.2152
+									vfx_5.Shape = Enum.PartType.Ball
+									vfx_5.Size = Vector3.new(6.952, 9.598, 7.953)
+									vfx_5.Parent = workspace
+									table.insert(_vfxI, vfx_5)
+									local _s5, _ia5 = 0, 0
+									local _c5 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_5.Parent then
+													return
+											end
+											_s5 = _s5 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_5.CFrame = vfx_5:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 4 * math.sin(_s5 * 7.81 * 2 * math.pi))
+											vfx_5.Size = Vector3.new(6.952 * _sc, 9.598 * _sc, 7.953 * _sc)
+									end)
+									table.insert(_vfxC, _c5)
+							end
+
+							do -- Part 6 (Part)
+									local vfx_6 = Instance.new('Part')
+									vfx_6.Name = 'Part_6'
+									vfx_6.Anchored = true
+									vfx_6.CanCollide = false
+									vfx_6.CanQuery = false
+									vfx_6.CanTouch = false
+									vfx_6.CastShadow = false
+									vfx_6.Color = Color3.fromRGB(255, 100, 100)
+									vfx_6.Material = Enum.Material.Granite
+									vfx_6.Transparency = 0.5553
+									vfx_6.Shape = Enum.PartType.Cylinder
+									vfx_6.Size = Vector3.new(200, 15, 15)
+									vfx_6.Parent = workspace
+									table.insert(_vfxI, vfx_6)
+									local _s6, _ia6 = 0, 0
+									local _c6 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_6.Parent then
+													return
+											end
+											_s6 = _s6 + dt
+											local _pt = _s6 * 800 * (2 * math.pi)
+											local _tgt = pp.CFrame *
+																			CFrame.new((0) + 0 * math.sin(_pt), (100) + 100 * math.sin(_pt), (0) + 0 * math.sin(_pt)) *
+																			CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_6.CFrame = vfx_6:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 0.3 * math.sin(_s6 * 20 * 2 * math.pi))
+											vfx_6.Size = Vector3.new(200 * _sc, 15 * _sc, 15 * _sc)
+									end)
+									table.insert(_vfxC, _c6)
+							end
+
+							do -- Part 6 (copy) (Part)
+									local vfx_7 = Instance.new('Part')
+									vfx_7.Name = 'Part_6_(copy)'
+									vfx_7.Anchored = true
+									vfx_7.CanCollide = false
+									vfx_7.CanQuery = false
+									vfx_7.CanTouch = false
+									vfx_7.CastShadow = false
+									vfx_7.Color = Color3.fromRGB(255, 100, 100)
+									vfx_7.Material = Enum.Material.Neon
+									vfx_7.Transparency = 0.4061
+									vfx_7.Shape = Enum.PartType.Cylinder
+									vfx_7.Size = Vector3.new(200, 10, 10)
+									vfx_7.Parent = workspace
+									table.insert(_vfxI, vfx_7)
+									local _s7, _ia7 = 0, 0
+									local _c7 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_7.Parent then
+													return
+											end
+											_s7 = _s7 + dt
+											local _pt = _s7 * 800 * (2 * math.pi)
+											local _tgt = pp.CFrame *
+																			CFrame.new((0) + 0 * math.sin(_pt), (100) + 100 * math.sin(_pt), (0) + 0 * math.sin(_pt)) *
+																			CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_7.CFrame = vfx_7:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 0.3 * math.sin(_s7 * 20 * 2 * math.pi))
+											vfx_7.Size = Vector3.new(200 * _sc, 10 * _sc, 10 * _sc)
+									end)
+									table.insert(_vfxC, _c7)
+							end
+
+							do -- Part 6 (copy) (copy) (Part)
+									local vfx_8 = Instance.new('Part')
+									vfx_8.Name = 'Part_6_(copy)_(copy)'
+									vfx_8.Anchored = true
+									vfx_8.CanCollide = false
+									vfx_8.CanQuery = false
+									vfx_8.CanTouch = false
+									vfx_8.CastShadow = false
+									vfx_8.Color = Color3.fromRGB(255, 200, 200)
+									vfx_8.Material = Enum.Material.Neon
+									vfx_8.Transparency = 0.1935
+									vfx_8.Shape = Enum.PartType.Cylinder
+									vfx_8.Size = Vector3.new(200, 5, 5)
+									vfx_8.Parent = workspace
+									table.insert(_vfxI, vfx_8)
+									local _s8, _ia8 = 0, 0
+									local _c8 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_8.Parent then
+													return
+											end
+											_s8 = _s8 + dt
+											local _pt = _s8 * 800 * (2 * math.pi)
+											local _tgt = pp.CFrame *
+																			CFrame.new((0) + 0 * math.sin(_pt), (100) + 100 * math.sin(_pt), (0) + 0 * math.sin(_pt)) *
+																			CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_8.CFrame = vfx_8:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 0.3 * math.sin(_s8 * 20 * 2 * math.pi))
+											vfx_8.Size = Vector3.new(200 * _sc, 5 * _sc, 5 * _sc)
+									end)
+									table.insert(_vfxC, _c8)
+							end
+
+							do -- ParticleEmitter 9 (ParticleEmitter)
+									local vfx_9 = Instance.new('Part')
+									vfx_9.Anchored = true
+									vfx_9.CanCollide = false
+									vfx_9.CanQuery = false
+									vfx_9.CanTouch = false
+									vfx_9.Transparency = 1
+									vfx_9.Size = Vector3.new(0.1, 0.1, 0.1)
+									vfx_9.Parent = workspace
+									local pe9 = Instance.new('ParticleEmitter', vfx_9)
+									pe9.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+									pe9.Rate = 1000
+									pe9.Speed = NumberRange.new(31.81, 34.05)
+									pe9.Lifetime = NumberRange.new(2.769, 3.325)
+									pe9.Size = NumberSequence.new(0.7664)
+									pe9.SpreadAngle = Vector2.new(-180, 180)
+									table.insert(_vfxI, vfx_9)
+									local _s9, _ia9 = 0, 0
+									local _c9 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_9.Parent then
+													return
+											end
+											_s9 = _s9 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, 2, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0))
+											vfx_9.CFrame = vfx_9:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+									end)
+									table.insert(_vfxC, _c9)
+							end
+
+							do -- Part 10 (Part)
+									local vfx_10 = Instance.new('Part')
+									vfx_10.Name = 'Part_10'
+									vfx_10.Anchored = true
+									vfx_10.CanCollide = false
+									vfx_10.CanQuery = false
+									vfx_10.CanTouch = false
+									vfx_10.CastShadow = false
+									vfx_10.Color = Color3.fromRGB(155, 100, 100)
+									vfx_10.Material = Enum.Material.Concrete
+									vfx_10.Transparency = 0.2
+									vfx_10.Shape = Enum.PartType.Cylinder
+									vfx_10.Size = Vector3.new(0.01, 50, 50)
+									vfx_10.Parent = workspace
+									table.insert(_vfxI, vfx_10)
+									local _s10, _ia10 = 0, 0
+									local _c10 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_10.Parent then
+													return
+											end
+											_s10 = _s10 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, -2.614, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_10.CFrame = vfx_10:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 0.6751 * math.sin(_s10 * 10 * 2 * math.pi))
+											vfx_10.Size = Vector3.new(0.01 * _sc, 50 * _sc, 50 * _sc)
+									end)
+									table.insert(_vfxC, _c10)
+							end
+
+							do -- Part 10 (copy) (Part)
+									local vfx_11 = Instance.new('Part')
+									vfx_11.Name = 'Part_10_(copy)'
+									vfx_11.Anchored = true
+									vfx_11.CanCollide = false
+									vfx_11.CanQuery = false
+									vfx_11.CanTouch = false
+									vfx_11.CastShadow = false
+									vfx_11.Color = Color3.fromRGB(155, 100, 100)
+									vfx_11.Material = Enum.Material.Concrete
+									vfx_11.Transparency = 0.054
+									vfx_11.Shape = Enum.PartType.Cylinder
+									vfx_11.Size = Vector3.new(0.01, 35, 35)
+									vfx_11.Parent = workspace
+									table.insert(_vfxI, vfx_11)
+									local _s11, _ia11 = 0, 0
+									local _c11 = RunService.Heartbeat:Connect(function(dt)
+											local pp = getP('HumanoidRootPart')
+											if not pp or not vfx_11.Parent then
+													return
+											end
+											_s11 = _s11 + dt
+											local _tgt = pp.CFrame * CFrame.new(0, -2.257, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(-90))
+											vfx_11.CFrame = vfx_11:Lerp(_tgt, math.min(1, 0.15 * 60 * dt + 0.3))
+											local _sc = math.max(0.01, 1 + 0.6751 * math.sin(_s11 * 10 * 2 * math.pi))
+											vfx_11.Size = Vector3.new(0.01 * _sc, 35 * _sc, 35 * _sc)
+									end)
+									table.insert(_vfxC, _c11)
+							end
+
+							-- To destroy all VFX: cleanupVFX()
+
               RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(
                   cf(1.635999177631579, 25 + 100 * sin(sine * 25), 0.07364007830619812), angles(-0.08812652346543892, 0, -0)),
                   deltaTime)
           end
       }
-
+--[[
       attacks["f"]["r"] = {
           duration = 8.5,
 					fn = function()
@@ -3051,7 +3390,7 @@
               AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
               AJBackAccessory.Part1 = getPart("Right Arm")
           end
-      }
+      }]]
       
 			-- Add more modes/keys the same way:
 			-- registerAttack("default", "x", function(p) ... end)
