@@ -2851,81 +2851,146 @@
 			local rock                     = getPartFromMesh(4307568890, 4307568951)
 			local RockAccessory            = getPartJoint(rock)
 
-			attacks["f"] = attacks["f"] or {}
-			attacks["f"]["z"] = {
-					duration = 3,
-					fn = function()
-						if not getLightningActive() then
-								setLightningActive(true)
-								spawnLightning()
-						end
-
-						RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0+0.025*sin(sine*20)),angles(-1.690860599383551,0,-3.141592502593994)),deltaTime)
-						Neck.C0=Lerp(Neck.C0,cfMul(cf(-0.1848053513911738,1,0),angles(-1.464800272747772,0,-3.141592502593994)),deltaTime)
-						LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-0.9586294073807569,-0.9072313810649675,-1.061425460012336-0.025*sin(sine*20)),angles(0.2539781041767064-0.02*sin(sine*20),-1.570796370506287,0)),deltaTime)
-						LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-0.4432223135964914,0.5890213815789469,-0.3903974566543313+0.1*sin(sine*20)),angles(-0.1353502565802174,-2.080185596147517,-1.593977602253932)),deltaTime)
-						RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1.448340164987664,-0.3646984434964367-0.025*sin(sine*20)),angles(-0.7830299123565023-0.02*sin(sine*20),1.570796370506287,0)),deltaTime)
-						RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(0.5376233552631584,0.5,0+0.1*sin(sine*20)),angles(1.583428120344262,1.486545123214642,-0.06896521958869251)),deltaTime)
-						SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-1.97579634817023,0.5270010964912286,2.6171875),angles(-0,0,-0)),deltaTime)
-						RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.556640625,37.5+75*sin(sine*25),-0.1183305706894187),angles(-0.15,0.04686378586849749,-0)),deltaTime)
-						AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-						AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(30),rad(-90))
-						AJBackAccessory.Part1=getPart("Right Arm")
-				end
-			}
-			attacks["f"]["x"] = {
-					duration = 5,
-					fn = function()
-						if not getLightningActive() then
-								setLightningActive(true)
-								spawnLightning()
-						end
-						RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0),angles(-1.5+0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
-						Neck.C0=Lerp(Neck.C0,cfMul(cf(0,1,0),angles(-0.8372137468970156-0.07000000000000001*sin(sine*2),0,-3.141592502593994)),deltaTime)
-						LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1,-1.38009322317023,0.1504248903508776),angles(-0.9645947041647291-0.07000000000000001*sin(sine*2),-1.570796370506287,0)),deltaTime)
-						LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-1,0.5,0),angles(-0.1644151557191025-0.07000000000000001*sin(sine*2),-1.061477701294349,0)),deltaTime)
-						RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1.048862390350877-0.05*sin(sine*2),-0.8189981025561952),angles(-0.0675321585894828-0.07000000000000001*sin(sine*2),1.570796370506287,0)),deltaTime)
-						RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,0.5-0.1*sin(sine*4),0),angles(3.041695518771697-0.07000000000000001*sin(sine*2),1.92036565480616,-0.0675321585894828)),deltaTime)
-						RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(15,25+25*sin(sine*3),0.07364007830619812),angles(0,(0+sine*20),-0)),deltaTime)
-						SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(5,4.5+15*sin(sine*20),-0.1002724319696426),angles(-0,(-6.283185307179586+sine*10),-0)),deltaTime)
-						AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-						AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(30),rad(-90))
-						AJBackAccessory.Part1=getPart("Right Arm")
-				end
-			}
-      attacks["f"]["c"] = {
-			duration = 1,
-          trailFadeDuration = 0.6,    -- how long each ghost clone takes to fade
-          trailStartAlpha   = 0.3,    -- starting transparency of each clone (0=opaque, 1=invisible)
-          trailSpawnRate    = 2,       -- spawn a ghost every N * 0.1s (1=every frame, 2=every other, etc)
+      attacks["f"] = attacks["f"] or {}
+      attacks["f"]["z"] = {
+          duration = 3,
           fn = function()
-            -- read config from the attack def itself
-            local progress = getAttackProgress()
-            local attackDef = attacks["f"]["c"]
+              if not getLightningActive() then
+                  setLightningActive(true)
+                  spawnLightning()
+              end
 
-            if math.floor(progress * 10) % attackDef.trailSpawnRate == 0 then
-                spawnHatTrail(attackDef.trailFadeDuration, attackDef.trailStartAlpha)
-            end
-            local rootCF = cframes[RootJoint.Part0]
-            if rootCF then
-                local lookVec = cfGet(rootCF, "LookVector") * v3_101
-                local newPos = cfGet(rootCF, "Position") + lookVec * 8 * deltaTime
-                setCfr(cfAdd(cfGet(rootCF, "Rotation"), newPos))
-            end
-            
-            RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0.06727519788240155,0.8468119303385411,0),angles(-2.303447080643997+0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
-            Neck.C0=Lerp(Neck.C0,cfMul(cf(0.04300301535087758,1,0),angles(-0.8645562816424857-0.1*sin(sine*4),0,-3.141592502593994)),deltaTime)
-            LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1.096491228070176,-0.4452782346491233,-1.004946524636787),angles(-0.6815550648420938-0.1*sin(sine*4),-1.323852331888956,0)),deltaTime)
-            LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-1,0.5,0),angles(-0.6815550648420938-0.1*sin(sine*4),-1.110349790957513-0.1*sin(sine*2),0)),deltaTime)
-            RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1,0),angles(-0.8035536333803845-0.1*sin(sine*4),1.125134539998648-0.1*sin(sine*4+-0.7686660261097682),0)),deltaTime)
-            RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1,0.5,0),angles(-0.6815550648420938-0.1*sin(sine*4),1.247136472529894-0.1*sin(sine*2+0.1),0)),deltaTime)
-            RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-5,5,-5),angles(-0,(0+sine*25),-0)),deltaTime)
-            SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(-5,2.28452715957374,-5),angles(4.647009777286977,(0+sine*20),-0)),deltaTime)
-            AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-						AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(90),rad(30),rad(-90))
-						AJBackAccessory.Part1=getPart("Right Arm")
-				end
-			}
+              RootJoint.C0 = Lerp(RootJoint.C0, cfMul(cf(0, 0, 0 + 0.025 * sin(sine * 20)),
+                  angles(-1.690860599383551, 0, -3.141592502593994)), deltaTime)
+              Neck.C0 = Lerp(Neck.C0, cfMul(cf(-0.1848053513911738, 1, 0), angles(-1.464800272747772, 0, -3.141592502593994)),
+                  deltaTime)
+              LeftHip.C0 = Lerp(LeftHip.C0,
+                  cfMul(cf(-0.9586294073807569, -0.9072313810649675, -1.061425460012336 - 0.025 * sin(sine * 20)),
+                      angles(0.2539781041767064 - 0.02 * sin(sine * 20), -1.570796370506287, 0)), deltaTime)
+              LeftShoulder.C0 = Lerp(LeftShoulder.C0,
+                  cfMul(cf(-0.4432223135964914, 0.5890213815789469, -0.3903974566543313 + 0.1 * sin(sine * 20)),
+                      angles(-0.1353502565802174, -2.080185596147517, -1.593977602253932)), deltaTime)
+              RightHip.C0 = Lerp(RightHip.C0, cfMul(cf(1, -1.448340164987664, -0.3646984434964367 - 0.025 * sin(sine * 20)),
+                  angles(-0.7830299123565023 - 0.02 * sin(sine * 20), 1.570796370506287, 0)), deltaTime)
+              RightShoulder.C0 = Lerp(RightShoulder.C0, cfMul(cf(0.5376233552631584, 0.5, 0 + 0.1 * sin(sine * 20)), angles(
+                  1.583428120344262, 1.486545123214642, -0.06896521958869251)), deltaTime)
+              SpringPixie_150381051_LC.C0 = Lerp(SpringPixie_150381051_LC.C0, cfMul(
+                  cf(-1.97579634817023, 0.5270010964912286, 2.6171875), angles(-0, 0, -0)), deltaTime)
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(
+                  cf(-0.556640625, 37.5 + 75 * sin(sine * 25), -0.1183305706894187), angles(-0.15, 0.04686378586849749, -0)),
+                  deltaTime)
+              AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
+                  cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
+              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+              AJBackAccessory.Part1 = getPart("Right Arm")
+          end
+      }
+      attacks["f"]["x"] = {
+          duration = 5,
+          fn = function()
+              if not getLightningActive() then
+                  setLightningActive(true)
+                  spawnLightning()
+              end
+              RootJoint.C0 = Lerp(RootJoint.C0, cfMul(cf(0, 0, 0), angles(-1.5 + 0.07000000000000001 * sin(sine * 2), 0,
+                  -3.141592502593994)), deltaTime)
+              Neck.C0 = Lerp(Neck.C0, cfMul(cf(0, 1, 0), angles(-0.8372137468970156 - 0.07000000000000001 * sin(sine * 2), 0,
+                  -3.141592502593994)), deltaTime)
+              LeftHip.C0 = Lerp(LeftHip.C0, cfMul(cf(-1, -1.38009322317023, 0.1504248903508776), angles(
+                  -0.9645947041647291 - 0.07000000000000001 * sin(sine * 2), -1.570796370506287, 0)), deltaTime)
+              LeftShoulder.C0 = Lerp(LeftShoulder.C0, cfMul(cf(-1, 0.5, 0), angles(
+                  -0.1644151557191025 - 0.07000000000000001 * sin(sine * 2), -1.061477701294349, 0)), deltaTime)
+              RightHip.C0 = Lerp(RightHip.C0, cfMul(cf(1, -1.048862390350877 - 0.05 * sin(sine * 2), -0.8189981025561952),
+                  angles(-0.0675321585894828 - 0.07000000000000001 * sin(sine * 2), 1.570796370506287, 0)), deltaTime)
+              RightShoulder.C0 = Lerp(RightShoulder.C0, cfMul(cf(1, 0.5 - 0.1 * sin(sine * 4), 0), angles(
+                  3.041695518771697 - 0.07000000000000001 * sin(sine * 2), 1.92036565480616, -0.0675321585894828)), deltaTime)
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(cf(15, 25 + 25 * sin(sine * 3), 0.07364007830619812),
+                  angles(0, (0 + sine * 20), -0)), deltaTime)
+              SpringPixie_150381051_LC.C0 = Lerp(SpringPixie_150381051_LC.C0, cfMul(
+                  cf(5, 4.5 + 15 * sin(sine * 20), -0.1002724319696426), angles(-0, (-6.283185307179586 + sine * 10), -0)),
+                  deltaTime)
+              AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
+                  cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
+              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+              AJBackAccessory.Part1 = getPart("Right Arm")
+          end
+      }
+      attacks["f"]["q"] = {
+          duration = 1,
+          trailFadeDuration = 0.6, -- how long each ghost clone takes to fade
+          trailStartAlpha = 0.3, -- starting transparency of each clone (0=opaque, 1=invisible)
+          trailSpawnRate = 2, -- spawn a ghost every N * 0.1s (1=every frame, 2=every other, etc)
+          fn = function()
+              -- read config from the attack def itself
+              local progress = getAttackProgress()
+              local attackDef = attacks["f"]["c"]
+
+              if math.floor(progress * 10) % attackDef.trailSpawnRate == 0 then
+                  spawnHatTrail(attackDef.trailFadeDuration, attackDef.trailStartAlpha)
+              end
+              local rootCF = cframes[RootJoint.Part0]
+              if rootCF then
+                  local lookVec = cfGet(rootCF, "LookVector") * v3_101
+                  local newPos = cfGet(rootCF, "Position") + lookVec * 8 * deltaTime
+                  setCfr(cfAdd(cfGet(rootCF, "Rotation"), newPos))
+              end
+
+              RootJoint.C0 = Lerp(RootJoint.C0, cfMul(cf(0.06727519788240155, 0.8468119303385411, 0),
+                  angles(-2.303447080643997 + 0.1 * sin(sine * 4), 0, -3.141592502593994)), deltaTime)
+              Neck.C0 = Lerp(Neck.C0, cfMul(cf(0.04300301535087758, 1, 0),
+                  angles(-0.8645562816424857 - 0.1 * sin(sine * 4), 0, -3.141592502593994)), deltaTime)
+              LeftHip.C0 = Lerp(LeftHip.C0, cfMul(cf(-1.096491228070176, -0.4452782346491233, -1.004946524636787),
+                  angles(-0.6815550648420938 - 0.1 * sin(sine * 4), -1.323852331888956, 0)), deltaTime)
+              LeftShoulder.C0 = Lerp(LeftShoulder.C0, cfMul(cf(-1, 0.5, 0), angles(-0.6815550648420938 - 0.1 * sin(sine * 4),
+                  -1.110349790957513 - 0.1 * sin(sine * 2), 0)), deltaTime)
+              RightHip.C0 = Lerp(RightHip.C0, cfMul(cf(1, -1, 0), angles(-0.8035536333803845 - 0.1 * sin(sine * 4),
+                  1.125134539998648 - 0.1 * sin(sine * 4 + -0.7686660261097682), 0)), deltaTime)
+              RightShoulder.C0 = Lerp(RightShoulder.C0, cfMul(cf(1, 0.5, 0), angles(-0.6815550648420938 - 0.1 * sin(sine * 4),
+                  1.247136472529894 - 0.1 * sin(sine * 2 + 0.1), 0)), deltaTime)
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(cf(-5, 5, -5), angles(-0, (0 + sine * 25), -0)), deltaTime)
+              SpringPixie_150381051_LC.C0 = Lerp(SpringPixie_150381051_LC.C0, cfMul(cf(-5, 2.28452715957374, -5), angles(
+                  4.647009777286977, (0 + sine * 20), -0)), deltaTime)
+              AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
+                  cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
+              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+              AJBackAccessory.Part1 = getPart("Right Arm")
+          end
+      }
+      attacks["f"]["v"] = {
+          duration = 5,
+          fn = function()
+              -- read config from the attack def itself
+              local progress = getAttackProgress()
+              local attackDef = attacks["f"]["v"]
+
+              RootJoint.C0 = Lerp(RootJoint.C0, cfMul(cf(0, 0, 0),
+                  angles(-1.274980242225792 - 0.1 * sin(sine * 2), 0, -3.141592502593994)), deltaTime)
+              Neck.C0 = Lerp(Neck.C0,
+                  cfMul(cf(0, 1, 0), angles(-0.9071848003795182 + 0.1 * sin(sine * 2), 0, -3.141592502593994)), deltaTime)
+              LeftHip.C0 = Lerp(LeftHip.C0, cfMul(cf(-1, -1, 0),
+                  angles(-0.3725319439281662 + 0.1 * sin(sine * 2), -1.30906758284782, 0)), deltaTime)
+              LeftShoulder.C0 = Lerp(LeftShoulder.C0, cfMul(cf(-1, 0.5, 0), angles(-0.2720629303075679 + 0.1 * sin(sine * 2),
+                  -1.208598569227223, 0)), deltaTime)
+              RightHip.C0 = Lerp(RightHip.C0, cfMul(cf(1, -1, 0),
+                  angles(-0.3061502709295976 + 0.1 * sin(sine * 2), 1.299594578684036, 0)), deltaTime)
+              RightShoulder.C0 = Lerp(RightShoulder.C0, cfMul(cf(1, 0.5 + 0.15 * sin(sine * 15), 0),
+                  angles(2.775 + 0.1 * sin(sine * 2), 1.902422116379446, 0)), deltaTime)
+              SpringPixie_150381051_LC.C0 = Lerp(SpringPixie_150381051_LC.C0, cfMul(
+                  cf(-1.005289178145559, 3.544865658408717, -0.1001110411526867), angles(-0, 0, -0)), deltaTime)
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(cf(1.635999177631579, 25, 0.07364007830619812),
+                  angles(-0.08812652346543892, 0, -0)), deltaTime)
+              AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
+                  cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
+              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+              AJBackAccessory.Part1 = getPart("Right Arm")
+              twait(0.5)
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(
+                  cf(1.635999177631579, 25 + 100 * sin(sine * 25), 0.07364007830619812), angles(-0.08812652346543892, 0, -0)),
+                  deltaTime)
+          end
+      }
+
+      
 			-- Add more modes/keys the same way:
 			-- registerAttack("default", "x", function(p) ... end)
 			-- registerAttack("f",       "x", function(p) ... end)
@@ -3051,7 +3116,8 @@
 				local attackKeybinds = {
 						[e.KeyCode.Z] = { modeKey = "f", attackKey = "z" },
 						[e.KeyCode.X] = { modeKey = "f", attackKey = "x" },
-            [e.KeyCode.C] = { modeKey = "f", attackKey = "c" },
+           				[e.KeyCode.Q] = { modeKey = "f", attackKey = "q" },
+						[e.KeyCode.V] = { modeKey = "f", attackKey = "v" },
 						-- e.g. [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
 				}
 				-- modeKey = nil  means "fire for whatever current mode is active"
@@ -3116,7 +3182,7 @@
 				G2L["1"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 				G2L["1"].ResetOnSpawn = false
 				G2L["1"].IgnoreGuiInset = true
-
+			  G2L["1"].ScreenInsets = Enum.ScreenInsets.None
 				-- ============================================================
 				-- FadeInThing (edge vignette frames, all scale-based)
 				-- ============================================================
@@ -3301,7 +3367,7 @@
 						local rotDeg = math.sin(clock * 0.45) * 2
 
 						-- Move all bottom pieces together vertically
-						G2L["3"].Position = UDim2.new(0, 0, BASE_FADE_Y + oscY, 0)
+						
 						G2L["c"].Position = UDim2.new(BASE_X, 0, BASE_DIVTOP_Y + oscY, 0)
 						G2L["d"].Position = UDim2.new(BASE_X, 0, BASE_DIVBOT_Y + oscY, 0)
 						G2L["e"].Position = UDim2.new(CONT_BASE_X, 0, BASE_CONT_Y + oscY, 0)
