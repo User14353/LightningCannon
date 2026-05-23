@@ -3410,8 +3410,8 @@
 
 				-- Configuration: Link your GitHub raw URLs here
 				local SongLinks = {
-						["default"] = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunAway?raw=true",
-						["f"]       = "https://raw.githubusercontent.com/bayly098764321/Hat-FE/main/GunOut?raw=true",
+						["default"] = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/GunAway.mp3?raw=true",
+						["f"]       = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/GunOut.mp3?raw=true",
 				}
 
 				function getmp3(modeName)
