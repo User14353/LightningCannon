@@ -1976,49 +1976,51 @@
         end
     end))
 
-    local function spawnHatTrail(fadeDuration, startAlpha)
-        fadeDuration = fadeDuration or 0.6
-        startAlpha   = startAlpha   or 0.3
+		local function spawnHatTrail(fadeDuration, startAlpha)
+				fadeDuration = fadeDuration or 0.6
+				startAlpha = startAlpha or 0.3
 
-        for partTable, partCF in next, cframes do
-            local realPart = partTable.p
-            if realPart and partTable.m then
-                local ok, clone = pcall(Clone, realPart)
+				for partTable, partCF in next, cframes do
+						local realPart = partTable.p
+						if realPart and partTable.m then
+								local ok, clone = pcall(Clone, realPart)
 
-                if ok and clone then
+								if ok and clone then
 
-                -- Handle both MeshPart and SpecialMesh parts safely
-                local mesh = FindFirstChildOfClass(clone, "SpecialMesh")
-                pcall(ClearAllChildren, clone) -- pcall in case children are locked
-                if mesh then
-                    pcall(function()
-                        insSet(mesh, "TextureId", "")
-                        insSet(mesh, "Parent", clone)
-                    end)
-                end
+										-- Handle both MeshPart and SpecialMesh parts safely
+										local mesh = FindFirstChildOfClass(clone, "SpecialMesh")
+										pcall(ClearAllChildren, clone) -- pcall in case children are locked
+										if mesh then
+												pcall(function()
+														insSet(mesh, "TextureId", "")
+														insSet(mesh, "Parent", clone)
+												end)
+										end
 
-                insSet(clone, "Anchored",     true)
-                insSet(clone, "CanCollide",   false)
-                insSet(clone, "CanQuery",     false)
-                insSet(clone, "CanTouch",     false)
-                insSet(clone, "CastShadow",   false)
-                insSet(clone, "Color",        c3(1, 1, 1))
-                insSet(clone, "Material",     e.Material.SmoothPlastic)
-                insSet(clone, "Transparency", startAlpha)
-                insSet(clone, "CFrame",       partCF)
-                insSet(clone, "Name",         "HatTrailClone")
-                insSet(clone, "Archivable",   false)
-                insSet(clone, "Parent",       ws)
+										insSet(clone, "Anchored", true)
+										insSet(clone, "CanCollide", false)
+										insSet(clone, "CanQuery", false)
+										insSet(clone, "CanTouch", false)
+										insSet(clone, "CastShadow", false)
+										insSet(clone, "Color", c3(1, 1, 1))
+										insSet(clone, "Material", e.Material.SmoothPlastic)
+										insSet(clone, "Transparency", startAlpha)
+										insSet(clone, "CFrame", partCF)
+										insSet(clone, "Name", "HatTrailClone")
+										insSet(clone, "Archivable", false)
+										insSet(clone, "Parent", ws)
 
-                tinsert(hatTrailQueue, {
-                    clone             = clone,
-                    startTime         = osclock(),
-                    startTransparency = startAlpha,
-                    fadeDuration      = fadeDuration,
-                })
-            end
-        end
-    end
+										tinsert(hatTrailQueue, {
+												clone = clone,
+												startTime = osclock(),
+												startTransparency = startAlpha,
+												fadeDuration = fadeDuration
+										})
+								end
+						end
+				end
+		end
+
 		-- Attack state (read inside mainFunction's lerp step)
 		local attackActive = false
 		local attackProgress = 0       -- 0..1 drives the lerp weight
@@ -3015,18 +3017,27 @@
 
       attacks["f"]["r"] = {
           duration = 8.5,
-          fn = function()
+					fn = function()
+							local progress = getAttackProgress()
+							local attackDef = attacks["f"]["r"]
 
-              local link = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/Unsubstantual.mp3?raw=true"
-              local sound = soundFromLink(link)
-              if sound then
-                  sound:Play()
-                  game:GetService("Debris"):AddItem(sound, 8.5)
-              end
+							-- Only play sound on the very first frame
+							if progress < 0.02 and not attackDef._soundPlayed then
+									attackDef._soundPlayed = true
+									local link = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/Unsubstantual.mp3?raw=true"
+									task.spawn(function()
+											local sound = soundFromLink(link)
+											if sound then
+													sound:Play()
+													game:GetService("Debris"):AddItem(sound, 8.5)
+											end
+									end)
+							end
 
-
-              local progress = getAttackProgress()
-              local attackDef = attacks["f"]["v"]
+							-- Reset flag when attack ends (attackProgress resets to 0 on next fire)
+							if progress >= 0.99 then
+									attackDef._soundPlayed = false
+							end
 
               RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0),angles(-1.422313041714887-0.1*sin(sine*2),0.1385796898178704,-2.95270781310955)),deltaTime)
               Neck.C0=Lerp(Neck.C0,cfMul(cf(0,1,0),angles(-1.820609807692211+0.1*sin(sine*2),-0.1359221353827174,-0.7477214422914855)),deltaTime)
@@ -3560,7 +3571,7 @@
 				playModeMusic()
 			end)
 	end;
-end
+
 
 	task.spawn(C_c);
 	-- Configuration: Use NUMBERS only, no quotes
