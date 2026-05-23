@@ -1984,39 +1984,41 @@
             local realPart = partTable.p
             if realPart and partTable.m then
                 local ok, clone = pcall(Clone, realPart)
-                if not ok or not clone then continue end
 
-                -- Handle both MeshPart and SpecialMesh parts safely
-                local mesh = FindFirstChildOfClass(clone, "SpecialMesh")
-                pcall(ClearAllChildren, clone) -- pcall in case children are locked
-                if mesh then
-                    pcall(function()
-                        insSet(mesh, "TextureId", "")
-                        insSet(mesh, "Parent", clone)
-                    end)
-                end
+                if ok and clone then
 
-                insSet(clone, "Anchored",     true)
-                insSet(clone, "CanCollide",   false)
-                insSet(clone, "CanQuery",     false)
-                insSet(clone, "CanTouch",     false)
-                insSet(clone, "CastShadow",   false)
-                insSet(clone, "Color",        c3(1, 1, 1))
-                insSet(clone, "Material",     e.Material.SmoothPlastic)
-                insSet(clone, "Transparency", startAlpha)
-                insSet(clone, "CFrame",       partCF)
-                insSet(clone, "Name",         "HatTrailClone")
-                insSet(clone, "Archivable",   false)
-                insSet(clone, "Parent",       ws)
+                  -- Handle both MeshPart and SpecialMesh parts safely
+                  local mesh = FindFirstChildOfClass(clone, "SpecialMesh")
+                  pcall(ClearAllChildren, clone) -- pcall in case children are locked
+                  if mesh then
+                      pcall(function()
+                          insSet(mesh, "TextureId", "")
+                          insSet(mesh, "Parent", clone)
+                      end)
+                  end
 
-                tinsert(hatTrailQueue, {
-                    clone             = clone,
-                    startTime         = osclock(),
-                    startTransparency = startAlpha,
-                    fadeDuration      = fadeDuration,
-                })
-            end
-        end
+                  insSet(clone, "Anchored",     true)
+                  insSet(clone, "CanCollide",   false)
+                  insSet(clone, "CanQuery",     false)
+                  insSet(clone, "CanTouch",     false)
+                  insSet(clone, "CastShadow",   false)
+                  insSet(clone, "Color",        c3(1, 1, 1))
+                  insSet(clone, "Material",     e.Material.SmoothPlastic)
+                  insSet(clone, "Transparency", startAlpha)
+                  insSet(clone, "CFrame",       partCF)
+                  insSet(clone, "Name",         "HatTrailClone")
+                  insSet(clone, "Archivable",   false)
+                  insSet(clone, "Parent",       ws)
+
+                  tinsert(hatTrailQueue, {
+                      clone             = clone,
+                      startTime         = osclock(),
+                      startTransparency = startAlpha,
+                      fadeDuration      = fadeDuration,
+                  })
+              end
+          end
+      end
     end
 		-- Attack state (read inside mainFunction's lerp step)
 		local attackActive = false
@@ -3624,6 +3626,5 @@
 			before fireAttack(), then restoring it, or make it a field in the
 			attack table if you want per-attack durations.
 	]]
-
 
 
