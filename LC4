@@ -2977,13 +2977,13 @@
                   angles(2.775 + 0.1 * sin(sine * 2), 1.902422116379446, 0)), deltaTime)
               SpringPixie_150381051_LC.C0 = Lerp(SpringPixie_150381051_LC.C0, cfMul(
                   cf(-1.005289178145559, 3.544865658408717, -0.1001110411526867), angles(-0, 0, -0)), deltaTime)
-              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(cf(1.635999177631579, 25, 0.07364007830619812),
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(cf(1.635999177631579, 150, 0.07364007830619812),
                   angles(-0.08812652346543892, 0, -0)), deltaTime)
               AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
                   cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
               AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
               AJBackAccessory.Part1 = getPart("Right Arm")
-              twait(0.5)
+              twait(1.5)
               RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(
                   cf(1.635999177631579, 25 + 100 * sin(sine * 25), 0.07364007830619812), angles(-0.08812652346543892, 0, -0)),
                   deltaTime)
