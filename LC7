@@ -3017,7 +3017,7 @@
           duration = 8.5,
           fn = function()
 
-              local link = "https://yourlink.com/audio.mp3?raw=true"
+              local link = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/Unsubstantual.mp3?raw=true"
               local sound = soundFromLink(link)
               if sound then
                   sound:Play()
@@ -3463,7 +3463,7 @@
 				local SongLinks = {
 						["default"] = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/GunAway.mp3?raw=true",
 						["f"]       = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/GunOut.mp3?raw=true",
-            ["exist"]   = "",
+            ["exist"]   = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/Unsubstantual.mp3",
 				}
 
 				function getmp3(modeName)
