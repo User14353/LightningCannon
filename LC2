@@ -2990,6 +2990,26 @@
           end
       }
 
+      attacks["f"]["r"] = {
+          duration = 7.5,
+          fn = function()
+              -- read config from the attack def itself
+              local progress = getAttackProgress()
+              local attackDef = attacks["f"]["v"]
+
+              RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0,0),angles(-1.422313041714887-0.1*sin(sine*2),0.1385796898178704,-2.95270781310955)),deltaTime)
+              Neck.C0=Lerp(Neck.C0,cfMul(cf(0,1,0),angles(-1.820609807692211+0.1*sin(sine*2),-0.1359221353827174,-0.7477214422914855)),deltaTime)
+              LeftHip.C0=Lerp(LeftHip.C0,cfMul(cf(-1.277468497293037,-1.35171187551398,0),angles(6.283185307179586+0.05*sin(sine*1),-0.9020177071992723,7.5)),deltaTime)
+              LeftShoulder.C0=Lerp(LeftShoulder.C0,cfMul(cf(-1,0.3786883437842654,0),angles(0.2623746305946071+0.1*sin(sine*2+0.860428480448153),-0.8715163830682204,0.5978757400643406)),deltaTime)
+              RightHip.C0=Lerp(RightHip.C0,cfMul(cf(1,-1,0-0.05*sin(sine*2)),angles(0+0.1*sin(sine*2),1.302968663618793,0)),deltaTime)
+              RightShoulder.C0=Lerp(RightShoulder.C0,cfMul(cf(1.03686951754386,0.1359772263911729,0),angles(-0.7477214422914855+0.1*sin(sine*2),1.089466122687351,0.4758738075330946)),deltaTime)
+              RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,120,0.07364007830619812),angles(-0,0,-0)),deltaTime)
+              SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,120,-0.1002724319696426),angles(-0,0,-0)),deltaTime)
+              AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
+              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+              AJBackAccessory.Part1 = getPart("Right Arm")
+          end
+      }
       
 			-- Add more modes/keys the same way:
 			-- registerAttack("default", "x", function(p) ... end)
@@ -3110,18 +3130,7 @@
 		})
 
 
-				-- ── Keybind system ─────────────────────────────────────────────
-				-- Maps KeyCode → {mode, attackKey}
-				-- Add entries here to bind more keys in more modes.
-				local attackKeybinds = {
-						[e.KeyCode.Z] = { modeKey = "f", attackKey = "z" },
-						[e.KeyCode.X] = { modeKey = "f", attackKey = "x" },
-           				[e.KeyCode.Q] = { modeKey = "f", attackKey = "q" },
-						[e.KeyCode.V] = { modeKey = "f", attackKey = "v" },
-						-- e.g. [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
-				}
-				-- modeKey = nil  means "fire for whatever current mode is active"
-				-- modeKey = "f"  means "only fire when in mode f"
+
 
 				local UIS = game:GetService("UserInputService")
 
@@ -3412,6 +3421,7 @@
 				local SongLinks = {
 						["default"] = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/GunAway.mp3?raw=true",
 						["f"]       = "https://github.com/bayly098764321/Exire-Reanimate/blob/main/Music/LightningCannon/GunOut.mp3?raw=true",
+            ["exist"]   = "",
 				}
 
 				function getmp3(modeName)
@@ -3503,6 +3513,68 @@
 								end)
 						end
 				end
+        function TauntSound()
+						currentSession = currentSession + 1
+						local mySession = currentSession -- Capture this specific "call"
+						
+						-- 1. Stop and cleanup immediately
+						if currentSound then 
+								currentSound:Stop()
+								currentSound:Destroy() 
+								currentSound = nil
+						end
+						
+						-- Use a local variable so we don't accidentally use a changed global halfway through
+						local targetMode = "exist"
+						local assetId = getmp3(targetMode)
+						
+						-- CHECK: Did the user switch modes while getmp3 was downloading?
+						
+				
+						if assetId then
+								local sound = Instance.new("Sound")
+								sound.Name = "TauntSount_" .. targetMode
+								sound.SoundId = assetId
+								sound.Volume = 1
+								sound.Looped = false
+								sound.Parent = game:GetService("SoundService")
+								
+								task.spawn(function()
+										local timeout = 0
+										while sound.TimeLength == 0 and timeout < 50 do
+												task.wait(0.1)
+												timeout = timeout + 1
+												-- CHECK: Did the user switch modes while we were waiting for the asset to prime?
+												if mySession ~= currentSession then 
+														sound:Destroy() 
+														return 
+												end
+										end
+										
+										-- Final safety check before playing
+										if mySession == currentSession then
+												sound:Play()
+												currentSound = sound
+												print("Now playing: " .. targetMode)
+										else
+												sound:Destroy()
+										end
+								end)
+						end
+				end
+        				-- ── Keybind system ─────────────────────────────────────────────
+				-- Maps KeyCode → {mode, attackKey}
+				-- Add entries here to bind more keys in more modes.
+				local attackKeybinds = {
+						[e.KeyCode.Z] = { modeKey = "f", attackKey = "z", t.setJumpPower(0), t.setWalkSpeed(0) },
+						[e.KeyCode.X] = { modeKey = "f", attackKey = "x", t.setJumpPower(0), t.setWalkSpeed(0) },
+           	[e.KeyCode.Q] = { modeKey = "f", attackKey = "q", t.setJumpPower(0), t.setWalkSpeed(0) },
+						[e.KeyCode.V] = { modeKey = "f", attackKey = "v", t.setJumpPower(0), t.setWalkSpeed(0) },
+            [e.KeyCode.R] = { modeKey = "f", attackKey = "r", t.setJumpPower(0), t.setWalkSpeed(0), TauntSound() },
+						-- e.g. [e.KeyCode.X] = { modeKey = nil, attackKey = "x" },
+				}
+				-- modeKey = nil  means "fire for whatever current mode is active"
+				-- modeKey = "f"  means "only fire when in mode f"
 				-- Initial play
 				playModeMusic()
 			end)
@@ -3572,3 +3644,6 @@
 			before fireAttack(), then restoring it, or make it a field in the
 			attack table if you want per-attack durations.
 	]]
+
+
+
