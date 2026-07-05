@@ -3098,7 +3098,7 @@ end)
       end]]
 
       attacks["f"] = attacks["f"] or {}
-      attacks["default"]["m1"] = {
+      attacks["f"]["m1"] = {
           duration = 1,
           _active = false,
           _linePart = nil,
@@ -3896,12 +3896,12 @@ end)
 
         local mouseAttackBinds = {
             [Enum.UserInputType.MouseButton1] = {
-                modeKey = nil,
+                modeKey = "f",
                 attackKey = "m1"
             },
 
             [Enum.UserInputType.Touch] = {
-                modeKey = nil,
+                modeKey = "f",
                 attackKey = "m1"
             }
         }
