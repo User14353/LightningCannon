@@ -3041,8 +3041,27 @@ end)
 			local LeftHip=getJoint("Left Hip")
 			local Neck=getJoint("Neck")
 
-			local gun                      = getPartFromMesh(6831441507, 6833003967)
-			local AJBackAccessory          = getPartJoint(gun)
+			local gunMode = 1
+
+      local function getGun()
+          local g1 = getPartFromMesh(6831441507, 6833003967)
+          if g1 and g1.p then
+              gunMode = 1
+              return g1
+          end
+
+          local g2 = getPartFromMesh(4615369575, 4615393635)
+          if g2 and g2.p then
+              gunMode = 2
+              return g2
+          end
+
+          return nil
+      end
+
+      local gun = getGun()
+      local AJBackAccessory = getPartJoint(gun)
+
 			local Pixie                    = getPartFromMesh(128216670, 150379943)
 			local SpringPixie_150381051_LC = getPartJoint(Pixie)
 			local staff                    = getPartFromMesh(5548423017, 5548423938)
@@ -3079,6 +3098,67 @@ end)
       end]]
 
       attacks["f"] = attacks["f"] or {}
+      attacks["default"]["m1"] = {
+          duration = 1,
+          _active = false,
+          _linePart = nil,
+          fn = function()
+              local progress = getAttackProgress()
+              local attackDef = attacks["default"]["m1"]
+
+              -- fire once on first frame
+              if not attackDef._active then
+                  attackDef._active = true
+
+                  playSound(3723700663, 3)
+
+              end
+              if not getLightningActive() then
+                  setLightningActive(true)
+                  spawnLightning()
+              end
+
+              RootJoint.C0 = Lerp(RootJoint.C0, cfMul(cf(0, 0, 0), angles(-1.446930742166087 - 0.1 * sin(sine * 2),
+                  -0.06903922743372171, -3.497620848076365)), deltaTime)
+              Neck.C0 = Lerp(Neck.C0,
+                  cfMul(cf(0, 1, 0),
+                      angles(-1.75193052750477 + 0.1 * sin(sine * 2), -0.008036579171620595 - 0.05 * sin(sine * 1),
+                          -2.946820825436743)), deltaTime)
+              LeftHip.C0 = Lerp(LeftHip.C0, cfMul(cf(-1, -1, 0), angles(-0.2215391201030625 + 0.1 * sin(sine * 2),
+                  -1.201133868858104, 0)), deltaTime)
+              LeftShoulder.C0 = Lerp(LeftShoulder.C0,
+                  cfMul(cf(-0.8344764040227517, 0.5061554490474229, -0.2005674127946824),
+                      angles(0.6970563443828333 + 0.1 * sin(sine * 2), -1.048633976188762, 0.6970563443828333)),
+                  deltaTime)
+              RightHip.C0 = Lerp(RightHip.C0, cfMul(cf(1, -1, 0), angles(-0.2825384043722083 + 0.1 * sin(sine * 2),
+                  1.308852287298644, 0.1462563217432109)), deltaTime)
+              RightShoulder.C0 = Lerp(RightShoulder.C0, cfMul(cf(1.017565810889528, 0.5, 0), angles(
+                  1.989330874394852 + 0.1 * sin(sine * 2), 1.438534215748186, -0.4919503298692893)), deltaTime)
+              RockAccessory.C0 = Lerp(RockAccessory.C0, cfMul(
+                  cf(-0.556640625, 37.5 + 75 * sin(sine * 25), -0.1183305706894187),
+                  angles(0, 0.04686378586849749, -0)), deltaTime)
+              if gunMode == 1 then
+                  AJBackAccessory.C0 =
+                      cf(1, 0, 0) * angles(rad(0), rad(0), rad(-72))
+
+              elseif gunMode == 2 then
+                  AJBackAccessory.C0 =
+                      cf(-1, 1, 0) * angles(rad(0), rad(0), rad(45))
+              end
+              AJBackAccessory.Part1 = getPart("Right Arm")
+              AJBackAccessory.C1 = cf_0
+
+              -- cleanup on last frame
+              if progress > 0.8 then
+                  twait(0.2)
+                  if attackDef._linePart and attackDef._linePart.Parent then
+                      attackDef._linePart:Destroy()
+                  end
+                  attackDef._linePart = nil
+                  attackDef._active = false
+              end
+          end
+      }
       attacks["f"]["z"] = {
           duration = 3,
           fn = function()
@@ -3108,8 +3188,15 @@ end)
                   deltaTime)
               AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
                   cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
-              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
-              AJBackAccessory.Part1 = getPart("Right Arm")
+              if gunMode == 1 then
+                    AJBackAccessory.C0 =
+                        cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+
+                elseif gunMode == 2 then
+                    AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(90), rad(30), rad(27))
+                end
+                AJBackAccessory.Part1 = getPart("Right Arm")
+                AJBackAccessory.C1 = cf_0
           end
       }
       attacks["f"]["x"] = {
@@ -3138,8 +3225,15 @@ end)
                   deltaTime)
               AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
                   cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
-              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
-              AJBackAccessory.Part1 = getPart("Right Arm")
+              if gunMode == 1 then
+                    AJBackAccessory.C0 =
+                        cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+
+                elseif gunMode == 2 then
+                    AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(90), rad(30), rad(27))
+                end
+                AJBackAccessory.Part1 = getPart("Right Arm")
+                AJBackAccessory.C1 = cf_0
           end
       }
       attacks["f"]["q"] = {
@@ -3179,8 +3273,15 @@ end)
                   4.647009777286977, (0 + sine * 20), -0)), deltaTime)
               AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
                   cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
-              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
-              AJBackAccessory.Part1 = getPart("Right Arm")
+              if gunMode == 1 then
+                    AJBackAccessory.C0 =
+                        cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+
+                elseif gunMode == 2 then
+                    AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(90), rad(30), rad(27))
+                end
+                AJBackAccessory.Part1 = getPart("Right Arm")
+                AJBackAccessory.C1 = cf_0
           end
       }
       attacks["f"]["v"] = {
@@ -3208,8 +3309,15 @@ end)
                   angles(-0.08812652346543892, 0, -0)), deltaTime)
               AJBackAccessory.C0 = Lerp(AJBackAccessory.C0, cfMul(
                   cf(0.01787352561950684, -0.2123314142227173, -0.140083909034729), angles(-0, 0, -0)), deltaTime)
-              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
-              AJBackAccessory.Part1 = getPart("Right Arm")
+              if gunMode == 1 then
+                    AJBackAccessory.C0 =
+                        cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+
+                elseif gunMode == 2 then
+                    AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(90), rad(30), rad(27))
+                end
+                AJBackAccessory.Part1 = getPart("Right Arm")
+                AJBackAccessory.C1 = cf_0
               twait(1.5)
 							-- VFX Animator export  (v1.1 bugfixed)
 							local RunService = game:GetService('RunService')
@@ -3583,8 +3691,15 @@ end)
               RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,120,0.07364007830619812),angles(-0,0,-0)),deltaTime)
               SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,120,-0.1002724319696426),angles(-0,0,-0)),deltaTime)
               AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(-0,0,-0)),deltaTime)
-              AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
-              AJBackAccessory.Part1 = getPart("Right Arm")
+              if gunMode == 1 then
+                    AJBackAccessory.C0 =
+                        cf(1, 0.5, 0) * angles(rad(90), rad(30), rad(-90))
+
+                elseif gunMode == 2 then
+                    AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(90), rad(30), rad(27))
+                end
+                AJBackAccessory.Part1 = getPart("Right Arm")
+                AJBackAccessory.C1 = cf_0
           end
       }]]
       
@@ -3607,8 +3722,17 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,-0.7)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(0,-0.5,-0.6)*angles(rad(0),rad(0),rad(0))
-				AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+				if gunMode == 1 then
+            AJBackAccessory.C0 =
+                cf(0, -0.5, -0.6) * angles(rad(0), rad(0), rad(0))
+
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 =
+                cf(-2, 0.5, -0.6) * angles(rad(0), rad(0), rad(117))
+        end
+
+        AJBackAccessory.Part1 = getPart("Torso")
+        AJBackAccessory.C1 = cf_0
 			end,
 			walk = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -3620,8 +3744,17 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,100,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(0,-0.5,-0.6)*angles(rad(0),rad(0),rad(0))
-				AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+				if gunMode == 1 then
+            AJBackAccessory.C0 =
+                cf(0, -0.5, -0.6) * angles(rad(0), rad(0), rad(0))
+
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 =
+                cf(-2, 0.5, -0.6) * angles(rad(0), rad(0), rad(117))
+        end
+
+        AJBackAccessory.Part1 = getPart("Torso")
+        AJBackAccessory.C1 = cf_0
 			end,
 			jump = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -3633,8 +3766,17 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(0,-0.5,-0.6)*angles(rad(0),rad(0),rad(0))
-				AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+				if gunMode == 1 then
+            AJBackAccessory.C0 =
+                cf(0, -0.5, -0.6) * angles(rad(0), rad(0), rad(0))
+
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 =
+                cf(-2, 0.5, -0.6) * angles(rad(0), rad(0), rad(117))
+        end
+
+        AJBackAccessory.Part1 = getPart("Torso")
+        AJBackAccessory.C1 = cf_0
 			end,
 			fall = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -3646,8 +3788,17 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(0,-0.5,-0.6)*angles(rad(0),rad(0),rad(0))
-				AJBackAccessory.Part1=getPart("Torso") AJBackAccessory.C1=cf_0
+				if gunMode == 1 then
+            AJBackAccessory.C0 =
+                cf(0, -0.5, -0.6) * angles(rad(0), rad(0), rad(0))
+
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 =
+                cf(-2, 0.5, -0.6) * angles(rad(0), rad(0), rad(117))
+        end
+
+        AJBackAccessory.Part1 = getPart("Torso")
+        AJBackAccessory.C1 = cf_0
 			end,
 		})
 
@@ -3662,8 +3813,14 @@ end)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,0.04),angles(-3.15,0,-0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(0),rad(-120))
-				AJBackAccessory.Part1=getPart("Right Arm")
+        if gunMode == 1 then
+            AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(180), rad(0), rad(-120))
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(180), rad(0), rad(-3))
+        end
+        AJBackAccessory.Part1 = getPart("Right Arm")
+        AJBackAccessory.C1 = cf_0
+
 			end,
 			walk = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -3675,8 +3832,13 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(0),rad(-120))
-				AJBackAccessory.Part1=getPart("Right Arm")
+				if gunMode == 1 then
+                    AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(180), rad(0), rad(-120))
+                elseif gunMode == 2 then
+                    AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(180), rad(0), rad(-3))
+                end
+                AJBackAccessory.Part1 = getPart("Right Arm")
+                AJBackAccessory.C1 = cf_0
 			end,
 			jump = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -3688,8 +3850,14 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(0),rad(-120))
-				AJBackAccessory.Part1=getPart("Right Arm")
+				        if gunMode == 1 then
+            AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(180), rad(0), rad(-120))
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(180), rad(0), rad(-3))
+        end
+        AJBackAccessory.Part1 = getPart("Right Arm")
+        AJBackAccessory.C1 = cf_0
+
 			end,
 			fall = function()
 				RootJoint.C0=Lerp(RootJoint.C0,cfMul(cf(0,0.01+0.01*sin(sine*2),0),angles(-1.563762217524132+0.05*sin(sine*1.5),0,-3.141592502593994)),deltaTime)
@@ -3701,8 +3869,14 @@ end)
 				AJBackAccessory.C0=Lerp(AJBackAccessory.C0,cfMul(cf(0.01787352561950684,-0.2123314142227173,-0.140083909034729),angles(0,0,0)),deltaTime)
 				SpringPixie_150381051_LC.C0=Lerp(SpringPixie_150381051_LC.C0,cfMul(cf(0.2000001668930054,50,-0.1002724319696426),angles(0,0,0)),deltaTime)
 				RockAccessory.C0=Lerp(RockAccessory.C0,cfMul(cf(-0.5793895721435547,-50,0.07364007830619812),angles(0,0,0)),deltaTime)
-				AJBackAccessory.C0=cf(1,0.5,0)*angles(rad(180),rad(0),rad(-120))
-				AJBackAccessory.Part1=getPart("Right Arm")
+				        if gunMode == 1 then
+            AJBackAccessory.C0 = cf(1, 0.5, 0) * angles(rad(180), rad(0), rad(-120))
+        elseif gunMode == 2 then
+            AJBackAccessory.C0 = cf(-1, 1.5, 0) * angles(rad(180), rad(0), rad(-3))
+        end
+        AJBackAccessory.Part1 = getPart("Right Arm")
+        AJBackAccessory.C1 = cf_0
+
 			end,
 		})
         -- ── Keybind system ─────────────────────────────────────────────
@@ -3720,37 +3894,66 @@ end)
 				-- modeKey = "f"  means "only fire when in mode f"
 
 
-				local UIS = game:GetService("UserInputService")
+        local mouseAttackBinds = {
+            [Enum.UserInputType.MouseButton1] = {
+                modeKey = nil,
+                attackKey = "m1"
+            },
 
-				if _G.AttackInputConnection then
-						_G.AttackInputConnection:Disconnect()
-						_G.AttackInputConnection = nil
-				end
+            [Enum.UserInputType.Touch] = {
+                modeKey = nil,
+                attackKey = "m1"
+            }
+        }
 
-				_G.AttackInputConnection = UIS.InputBegan:Connect(function(input, gpe)
-						if gpe then return end
 
-						local bind = attackKeybinds[input.KeyCode]
-						if not bind then return end
+        local UIS = game:GetService("UserInputService")
 
-						-- Determine which mode name to look up
-						-- t.getJoint etc. are already captured above via the addmode calls.
-						-- We read the active mode from the key-toggle logic in reanimate.
-						-- The cleanest way: resolve via the current _G.ModeV string.
-						local activeModeStr = tostring(_G.ModeV or "default")
+        if _G.AttackInputConnection then
+            _G.AttackInputConnection:Disconnect()
+            _G.AttackInputConnection = nil
+        end
 
-						-- If the bind is mode-locked, enforce it
-						if bind.modeKey and bind.modeKey ~= activeModeStr then return end
+        _G.AttackInputConnection = UIS.InputBegan:Connect(function(input, gpe)
+            if gpe then
+                return
+            end
 
-						-- Check the reanimate table has an attack for this mode
-						local targetMode = bind.modeKey or activeModeStr
-						if not attacks[targetMode] then
-								-- Fallback to default mode attack if this mode has none
-								targetMode = "default"
-						end
+            local mouseBind = mouseAttackBinds[input.UserInputType]
+            if mouseBind then
+                local activeModeStr = tostring(_G.ModeV or "default")
+                if mouseBind.modeKey and mouseBind.modeKey ~= activeModeStr then
+                    return
+                end
+                local targetMode = mouseBind.modeKey or activeModeStr
+                if not attacks[targetMode] or not attacks[targetMode][mouseBind.attackKey] then
+                    targetMode = "default"
+                end
+                if attacks[targetMode] and attacks[targetMode][mouseBind.attackKey] then
+                    fireAttack(targetMode, mouseBind.attackKey)
+                end
+                return
+            end
 
-						fireAttack(targetMode, bind.attackKey)
-				end)
+            local bind = attackKeybinds[input.KeyCode]
+            if not bind then
+                return
+            end
+
+            local activeModeStr = tostring(_G.ModeV or "default")
+            if bind.modeKey and bind.modeKey ~= activeModeStr then
+                return
+            end
+
+            local targetMode = bind.modeKey or activeModeStr
+            if not attacks[targetMode] or not attacks[targetMode][bind.attackKey] then
+                targetMode = "default"
+            end
+            if attacks[targetMode] and attacks[targetMode][bind.attackKey] then
+                fireAttack(targetMode, bind.attackKey)
+            end
+        end)
+
 				-- Setup Keybinds
 				_G.ModeV = "default" -- Default (matches attacks table keys)
 
